@@ -1,107 +1,64 @@
-# Berto & Katy's Hyrox Strategy App - Plan
+# HYROX Men's Doubles Strategy App - Plan
 
 ## Overview
-A clean, visual timeline display of the Hyrox Mixed Doubles race strategy for Berto and Katy - just like your handwritten notes but beautifully presented digitally.
+
+A static, mobile-friendly race strategy page for Jordan & Casey's HYROX Men's Doubles Open plan. The page shows the full 16-segment race flow, cumulative target times, station split visualization, and a Shanghai-specific rules checklist.
 
 ## Target Time
-**57:15** + 5min ROX Zone
 
-## Core Features
+- On-course target: 52:20
+- ROX Zone allowance: about 5:00
+- Full race target: about 57:20
 
-### 1. Timeline Display
-- **Station Cards**: Visual timeline showing each segment in order
-- **Cumulative Times**: Progressive timing (3:50, 7:20, 11:10, etc.)
-- **Athlete Assignments**: Clear breakdown of who does what (Berto vs Katy)
-- **Split Details**: Exact distances and percentages per athlete
+## Rule Baseline
 
-### 2. Visual Design
-- **Modern UI**: Clean, gradient-based design with cards
-- **Color Coding**: 
-  - Berto: Green (#4CAF50)
-  - Katy: Pink (#E91E63)
-- **Responsive**: Works on mobile and desktop
-- **Animations**: Smooth transitions and hover effects
+The app follows the current HYROX 25/26 Doubles Rulebook:
 
-### 3. Race Stations (16 total)
+- 8 x 1km runs, completed by both athletes.
+- Workout order: Ski Erg, Sled Push, Sled Pull, Burpee Broad Jumps, Row, Farmers Carry, Sandbag Lunges, Wall Balls.
+- Workout distances: 1000m, 50m, 50m, 80m, 1000m, 200m, 100m, 100 reps.
+- Men's Open weights: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
+- Athletes must remain within 5 seconds of each other and enter/exit workout stations together.
 
-#### Running Segments (8 x 1km)
-- Target: 3:50 each (except final push)
-- Strategy: Maintain consistent pace @ 6 min/km
+Sources: [HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and [HYROX Shanghai event page](https://hyrox.com/event/hyrox-shanghai/).
 
-#### Workout Stations (8)
-1. **Ski Erg** (1000m) - 3:30
-   - Berto: 70% (700m)
-   - Katy: 30% (300m)
+Shanghai-specific items still need the athlete guide:
 
-2. **Sled Push** (50m) - 1:35
-   - Berto: 70% (35m)
-   - Katy: 30% (15m)
+- Regular HYROX Doubles Men is listed for May 17, 2026.
+- HYROX Pro Doubles Men is listed for May 16, 2026 and uses heavier Pro weights.
+- Running lap count
+- Venue map
+- Lane direction and handoff points
+- Final technical briefing details
 
-3. **Sled Pull** (50m) - 2:30
-   - Berto: 70% (35m)
-   - Katy: 30% (15m)
+## Current Station Plan
 
-4. **Burpee Broad Jumps** (80m) - 2:05
-   - Switch every 5-7 reps
-   - Call switch ~60-70% (Katy)
+1. Run 1 - 1km together - 3:50
+2. Ski Erg - 1000m - 3:30 - 250m / 250m / 250m / 250m
+3. Run 2 - 1km together - 3:50
+4. Sled Push - 50m - 1:35 - Jordan 25m, Casey 25m
+5. Run 3 - 1km together - 3:50
+6. Sled Pull - 50m - 2:30 - Jordan 25m, Casey 25m
+7. Run 4 - 1km together - 4:00
+8. Burpee Broad Jumps - 80m - 2:05 - target handoff about every 10m, final section length follows Shanghai venue layout
+9. Run 5 - 1km together - 3:50
+10. Row - 1000m - 4:05 - 250m / 250m / 250m / 250m
+11. Run 6 - 1km together - 3:50
+12. Farmers Carry - 200m - 1:35 - Jordan 100m, Casey 100m, pending Shanghai layout confirmation
+13. Run 7 - 1km together - 3:50
+14. Sandbag Lunges - 100m - 2:30 - 4 x 25m
+15. Run 8 - 1km together - 3:50
+16. Wall Balls - 100 reps - 3:40 - first set 10 reps, then switch in 20-rep sets, then repeat any No rep immediately
 
-5. **Rowing** (1000m) - 4:05
-   - Berto: 300m → Katy: 250-300m → Berto: 400m
+## Implementation Notes
 
-6. **Farmers Carry** (200m) - 1:35
-   - Berto: 80m (60-70m) → Katy: 40m → Berto: 50m
+- Main app: `index.html`
+- No build step or dependencies
+- Open directly in a browser
+- Animation speed is controlled by `animationSlowdown` in the script
 
-7. **Sandbag Lunges** (100m) - 2:30
-   - Berto: 40m → Katy: 40m → Berto: 20m
+## Remaining Pre-Race Tasks
 
-8. **Wall Balls** (100 reps) - 3:40
-   - Alternating sets of 20 reps each
-   - Final push strategy
-
-## Technical Implementation
-
-### Core Features (Timeline Visualization Only)
-- [x] Create project structure
-- [x] Build HTML layout with station cards showing timeline
-- [x] Add CSS styling with Berto/Katy color coding
-- [x] Display cumulative time progression (3:50, 7:20, 11:10, etc.)
-- [x] Show athlete assignments per station
-- [x] Implement responsive design for mobile viewing
-- [x] Add basic animations and visual polish
-
-### Future Enhancements (Optional)
-- [ ] Export strategy to PDF for printing
-- [ ] Shareable link functionality
-- [ ] Print-optimized version
-
-## File Structure
-```
-hyrox_race_plan/
-├── index.html          # Main app file
-├── styles.css          # Styling (if separated)
-├── script.js           # JavaScript functionality
-├── PLAN.md            # This planning document
-└── README.md          # Project documentation
-```
-
-## Design Principles
-1. **Clarity**: Information should be instantly readable during race prep
-2. **Visual Hierarchy**: Important timing info prominently displayed
-3. **Team Focus**: Equal representation of both athletes
-4. **Mobile-First**: Usable on phones during race day
-5. **Performance**: Fast loading, minimal dependencies
-
-## Success Metrics
-- Clean digital version of your handwritten strategy
-- Clear timeline progression showing cumulative times
-- Easy identification of athlete responsibilities per station
-- Mobile-friendly for quick reference during race prep
-- Printable version for race day backup
-
-## Next Steps
-1. Create the main HTML structure
-2. Implement the station cards with timing
-3. Add athlete assignment visualization
-4. Style with modern UI components
-5. Test on mobile devices
-6. Add interactive features (timer, progress tracking)
+- Update Shanghai lap count once the athlete guide is available.
+- Confirm Wall Ball target handling at the Shanghai technical briefing.
+- Confirm carry/lunge lane lengths from the venue map.

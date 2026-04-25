@@ -1,63 +1,39 @@
-# 🏃‍♂️ Hyrox Mixed Doubles Strategy 🏃‍♀️
+# HYROX Men's Doubles Strategy
 
-A beautiful, clean timeline visualization of Berto & Katy's Hyrox race strategy.
+Static race-day reference for Jordan & Casey's HYROX Men's Doubles Open plan, with an animated station timeline and a rules checklist for the Shanghai event.
 
-## 🎯 Target Time: 57:15 + 5min ROX Zone
+## Current Target
 
-## ✨ Features
+- On-course target: 52:20
+- ROX Zone allowance: about 5:00
+- Full race target: about 57:20
 
-- **📅 Complete Timeline**: All 16 race segments (8 runs + 8 workout stations)
-- **⏰ Cumulative Timing**: Progressive time tracking (3:50, 7:20, 11:10...)
-- **👫 Athlete Assignments**: Clear Berto (green) vs Katy (pink) color coding
-- **📱 Mobile Responsive**: Perfect for race day reference on your phone
-- **🎨 Modern Design**: Clean, professional UI with smooth animations
+## Official Race Structure
 
-## 🏃‍♂️ Race Strategy Overview
+Men's Doubles is 8 x 1km runs plus 8 workout stations:
 
-### Running Segments (8 x 1km)
-- Target: 3:50 each @ 6 min/km pace
-- Strategy: Alternating 200m segments
+1. Ski Erg - 1000m
+2. Sled Push - 50m
+3. Sled Pull - 50m
+4. Burpee Broad Jumps - 80m
+5. Row - 1000m
+6. Farmers Carry - 200m
+7. Sandbag Lunges - 100m
+8. Wall Balls - 100 reps
 
-### Workout Stations
-1. **Ski Erg** (1000m) - 3:30 | Berto: 70%, Katy: 30%
-2. **Sled Push** (50m) - 1:35 | Berto: 70%, Katy: 30%
-3. **Sled Pull** (50m) - 2:30 | Berto: 70%, Katy: 30%
-4. **Burpee Broad Jumps** (80m) - 2:05 | Switch every 5-7 reps
-5. **Rowing** (1000m) - 4:05 | Berto: 300m → Katy: 250-300m → Berto: 400m
-6. **Farmers Carry** (200m) - 1:35 | Berto: 80m → Katy: 40m → Berto: 50m
-7. **Sandbag Lunges** (100m) - 2:30 | Berto: 40m → Katy: 40m → Berto: 20m
-8. **Wall Balls** (100 reps) - 3:40 | Alternating sets of 20 reps
+Both athletes complete every 1km run. Workout stations use YGIG format: one athlete works while the partner stays in the station.
 
-## 🚀 Getting Started
+## Shanghai Rule Checks
 
-1. Clone the repository
-2. Open `index.html` in your browser
-3. View your race strategy timeline!
+- Shanghai HYROX Doubles Men is listed for May 17, 2026 on the official event page.
+- Shanghai HYROX Pro Doubles Men is listed for May 16, 2026 and uses heavier Pro weights.
+- Shanghai race schedule details and running lap counts are still TBA, so confirm them from the athlete guide before race day.
+- Athletes must stay within 5 seconds of each other.
+- Both athletes must enter and leave workout stations together.
+- Men's Open weights: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
 
-## 📱 Usage
+Sources: [current HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and the [official HYROX Shanghai event page](https://hyrox.com/event/hyrox-shanghai/).
 
-Perfect for:
-- Race day quick reference
-- Sharing strategy with training partners
-- Pre-race visualization and preparation
-- Coaches and training analysis
+## Usage
 
-## 🛠️ Tech Stack
-
-- Pure HTML5, CSS3, JavaScript
-- No dependencies - runs anywhere
-- Mobile-first responsive design
-- Modern gradient styling with smooth animations
-
-## 📋 Project Status
-
-✅ **MVP Complete** - Full timeline visualization ready for race day!
-
-### Future Enhancements
-- Export to PDF for printing
-- Shareable link functionality
-- Print-optimized version
-
----
-
-**Good luck crushing your Hyrox race! 💪🔥**
+Open `index.html` directly in a browser.

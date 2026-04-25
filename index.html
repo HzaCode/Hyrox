@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyrox Mixed Doubles Strategy | Elite Timeline</title>
+    <title>Hyrox Men's Doubles Open Strategy | Race Simulator</title>
     <style>
         * {
             margin: 0;
@@ -23,6 +23,7 @@
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            position: relative;
         }
 
         .header {
@@ -55,24 +56,56 @@
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #333;
             color: #ffffff;
-            padding: 20px;
+            padding: 22px;
             border-radius: 16px;
-            font-size: 1.3rem;
-            font-weight: 600;
             text-align: center;
             margin-bottom: 40px;
             box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
 
+        .target-primary {
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .target-secondary {
+            margin-top: 4px;
+            color: #4FC3F7;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .target-budget {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .budget-chip {
+            padding: 6px 10px;
+            border: 1px solid #333;
+            border-radius: 999px;
+            background: rgba(10, 10, 10, 0.55);
+            color: #aaa;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
         .animation-controls {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
             margin-bottom: 40px;
         }
 
-        .play-btn {
+        .play-btn,
+        .reset-btn {
             background: linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%);
             border: none;
             border-radius: 50px;
@@ -88,12 +121,26 @@
             box-shadow: 0 4px 20px rgba(79, 195, 247, 0.3);
         }
 
-        .play-btn:hover {
+        .reset-btn {
+            padding: 14px 20px;
+            border: 1px solid #333;
+            background: #1a1a1a;
+            color: #ddd;
+            box-shadow: none;
+        }
+
+        .play-btn:hover,
+        .reset-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 32px rgba(79, 195, 247, 0.4);
         }
 
-        .play-btn:active {
+        .reset-btn:hover {
+            border-color: #4FC3F7;
+        }
+
+        .play-btn:active,
+        .reset-btn:active {
             transform: translateY(0);
         }
 
@@ -107,7 +154,10 @@
         }
 
         .play-icon {
-            font-size: 1.2rem;
+            min-width: 38px;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
             line-height: 1;
         }
 
@@ -124,21 +174,44 @@
             text-align: center;
         }
 
-        .runner-avatars {
-            position: absolute;
-            top: 50%;
-            left: 20px;
-            transform: translateY(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-            opacity: 0;
-            transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
+        .race-progress-panel {
+            margin: -18px auto 32px;
+            max-width: 620px;
         }
 
-        .runner-avatars.active {
-            opacity: 1;
+        .race-progress-meta {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #777;
+            font-size: 0.68rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+        }
+
+        .race-progress-meta span:nth-child(2) {
+            text-align: center;
+        }
+
+        .race-progress-meta span:last-child {
+            text-align: right;
+        }
+
+        .race-progress-track {
+            height: 8px;
+            border: 1px solid #333;
+            border-radius: 999px;
+            background: rgba(26, 26, 26, 0.9);
+            overflow: hidden;
+        }
+
+        .race-progress-fill {
+            width: var(--race-progress, 0%);
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #4FC3F7 0%, #66BB6A 100%);
+            transition: width 50ms linear;
         }
 
         .station-card {
@@ -149,47 +222,6 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-        }
-
-        .runner-avatar {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-            font-weight: bold;
-            border: 2px solid;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .runner-avatar.berto {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            border-color: #4CAF50;
-            color: white;
-        }
-
-        .runner-avatar.katy {
-            background: linear-gradient(135deg, #E91E63 0%, #c2185b 100%);
-            border-color: #E91E63;
-            color: white;
-        }
-
-        .runner-avatar.running::after {
-            content: '💨';
-            position: absolute;
-            left: -12px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 0.7rem;
-            animation: dash 0.8s infinite;
-        }
-
-        @keyframes dash {
-            0%, 100% { opacity: 0.4; transform: translateY(-50%) translateX(0); }
-            50% { opacity: 1; transform: translateY(-50%) translateX(-4px); }
         }
 
         .victory-celebration {
@@ -213,16 +245,26 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            width: min(520px, calc(100vw - 32px));
+            max-height: calc(100vh - 32px);
+            overflow-y: auto;
             background: rgba(0, 0, 0, 0.9);
             border: 2px solid #4FC3F7;
             border-radius: 20px;
-            padding: 40px;
+            padding: clamp(24px, 7vw, 40px);
             box-shadow: 0 20px 60px rgba(79, 195, 247, 0.3);
             backdrop-filter: blur(10px);
         }
 
         .trophy {
-            font-size: 4rem;
+            padding: 10px 16px;
+            border: 1px solid rgba(79, 195, 247, 0.45);
+            border-radius: 999px;
+            color: #4FC3F7;
+            font-size: 0.85rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
             margin-bottom: 10px;
             animation: trophy-bounce 2s infinite;
         }
@@ -283,6 +325,29 @@
             border-color: #C0C0C0;
         }
 
+        .team-podium {
+            align-items: center;
+        }
+
+        .team-step {
+            gap: 12px;
+        }
+
+        .team-winners {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .podium-base.team-base {
+            width: min(260px, calc(100vw - 96px));
+            height: 64px;
+            background: linear-gradient(135deg, #FFD54F 0%, #66BB6A 100%);
+            border-color: #FFD54F;
+            font-size: 1rem;
+        }
+
         .podium-winner {
             width: 50px;
             height: 50px;
@@ -296,12 +361,12 @@
             animation: winner-glow 2s infinite alternate;
         }
 
-        .podium-winner.berto {
+        .podium-winner.jordan {
             background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
             color: white;
         }
 
-        .podium-winner.katy {
+        .podium-winner.casey {
             background: linear-gradient(135deg, #E91E63 0%, #c2185b 100%);
             color: white;
         }
@@ -313,6 +378,8 @@
 
         .victory-stats {
             display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 30px;
             margin-top: 20px;
         }
@@ -431,19 +498,10 @@
             top: 0;
             left: 0;
             height: 100%;
-            width: 0%;
+            width: var(--card-progress, 0%);
             background: linear-gradient(90deg, #4FC3F7 0%, #29B6F6 100%);
             border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        .station-card.progressing .progress-indicator::after {
-            animation: fillProgress var(--duration) linear forwards;
-        }
-
-        @keyframes fillProgress {
-            from { width: 0%; }
-            to { width: 100%; }
+            transition: width 50ms linear;
         }
 
         .time-marker {
@@ -461,11 +519,20 @@
         .station-card {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #333;
+            border-left: 4px solid #4FC3F7;
             border-radius: 16px;
             padding: 20px;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+        }
+
+        .station-row.run-row .station-card {
+            border-left-color: #FFD54F;
+        }
+
+        .station-row:last-child .station-card {
+            border-left-color: #66BB6A;
         }
 
         .station-card::before {
@@ -492,10 +559,13 @@
         }
 
         .station-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 1.2rem;
             font-weight: 600;
             color: #ffffff;
-            letter-spacing: -0.01em;
+            letter-spacing: 0;
         }
 
         .station-duration {
@@ -535,13 +605,13 @@
             border: 1px solid;
         }
 
-        .berto {
+        .jordan {
             background: rgba(46, 125, 50, 0.15);
             color: #66BB6A;
             border-color: rgba(46, 125, 50, 0.3);
         }
 
-        .katy {
+        .casey {
             background: rgba(194, 24, 91, 0.15);
             color: #F06292;
             border-color: rgba(194, 24, 91, 0.3);
@@ -553,6 +623,17 @@
             color: #888;
             font-size: 0.8rem;
             font-weight: 400;
+        }
+
+        .station-alert {
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-left: 3px solid #FFD54F;
+            background: rgba(255, 213, 79, 0.08);
+            color: #d8d8d8;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
         }
 
         .run-segment {
@@ -580,15 +661,33 @@
         }
 
         .timeline-segment {
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
+            gap: 10px;
             margin: 12px 0;
+        }
+
+        .timeline-segment::before,
+        .timeline-segment::after {
+            color: #666;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .timeline-segment::before {
+            content: "START";
+        }
+
+        .timeline-segment::after {
+            content: "FINISH";
         }
 
         .timeline-track {
             display: flex;
             flex: 1;
-            height: 40px;
+            height: 62px;
             background: rgba(26, 26, 26, 0.8);
             border: 1px solid #333;
             border-radius: 8px;
@@ -606,22 +705,239 @@
             position: relative;
             font-size: 0.75rem;
             font-weight: 500;
+            transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+            isolation: isolate;
         }
 
         .timeline-block:last-child {
             border-right: none;
         }
 
-        .timeline-block.berto-block {
+        .timeline-block.jordan-block {
             background: rgba(46, 125, 50, 0.2);
             color: #66BB6A;
             border-color: rgba(46, 125, 50, 0.4);
         }
 
-        .timeline-block.katy-block {
+        .timeline-block.casey-block {
             background: rgba(194, 24, 91, 0.2);
             color: #F06292;
             border-color: rgba(194, 24, 91, 0.4);
+        }
+
+        .timeline-block.turn-out {
+            box-shadow: inset 0 -4px 0 rgba(255, 213, 79, 0.55);
+        }
+
+        .timeline-block.turn-back {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, 0.05) 0,
+                rgba(255, 255, 255, 0.05) 4px,
+                transparent 4px,
+                transparent 9px
+            );
+            box-shadow: inset 0 -4px 0 rgba(244, 67, 54, 0.55);
+        }
+
+        .timeline-block.turn-finish {
+            box-shadow: inset 0 -4px 0 rgba(102, 187, 106, 0.6);
+        }
+
+        .timeline-block::before {
+            content: attr(data-turn);
+            position: absolute;
+            top: 4px;
+            right: 6px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.5rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+        }
+
+        .timeline-block.active-work {
+            transform: scale(1.03);
+            z-index: 2;
+            filter: saturate(1.35);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45), 0 10px 26px rgba(0, 0, 0, 0.35);
+        }
+
+        .timeline-block.completed-work {
+            filter: saturate(0.75);
+            opacity: 0.65;
+        }
+
+        .timeline-block.active-work::after {
+            content: attr(data-exchange);
+            position: absolute;
+            left: 6px;
+            right: 6px;
+            bottom: 4px;
+            padding-top: 3px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 0.48rem;
+            font-weight: 800;
+            letter-spacing: 0.07em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .shuttle-course {
+            --active-left: 0%;
+            --waiting-left: 100%;
+            display: grid;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 12px;
+            background: rgba(10, 10, 10, 0.42);
+        }
+
+        .shuttle-meta {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            color: #777;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
+        }
+
+        .shuttle-meta span:nth-child(2) {
+            color: #aaa;
+        }
+
+        .shuttle-meta span:last-child {
+            text-align: right;
+        }
+
+        .shuttle-lane {
+            position: relative;
+            width: min(100%, var(--lane-size, 280px));
+            height: 64px;
+            margin: 0 auto;
+        }
+
+        .shuttle-line {
+            position: absolute;
+            top: 50%;
+            left: 18px;
+            right: 18px;
+            height: 8px;
+            transform: translateY(-50%);
+            border-radius: 999px;
+            background:
+                repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.16) 0 8px, transparent 8px 16px),
+                rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .shuttle-course[data-direction="out"] .shuttle-line {
+            box-shadow: inset 0 -3px 0 rgba(255, 213, 79, 0.55);
+        }
+
+        .shuttle-course[data-direction="back"] .shuttle-line {
+            box-shadow: inset 0 -3px 0 rgba(244, 67, 54, 0.55);
+        }
+
+        .shuttle-end {
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            transform: translate(-50%, -50%);
+            border: 1px solid #444;
+            border-radius: 50%;
+            background: #111;
+            color: #aaa;
+            font-size: 0.58rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+        }
+
+        .shuttle-end.start {
+            left: 0%;
+        }
+
+        .shuttle-end.turn {
+            left: 100%;
+        }
+
+        .shuttle-avatar {
+            position: absolute;
+            top: 50%;
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            background: #0f0f0f;
+            color: #ddd;
+            font-size: 0.75rem;
+            font-weight: 900;
+            transition: left 50ms linear, opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
+            z-index: 2;
+        }
+
+        .shuttle-avatar.active-avatar {
+            left: var(--active-left);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .shuttle-avatar.waiting-avatar {
+            left: var(--waiting-left);
+            opacity: 0.5;
+        }
+
+        .shuttle-avatar.jordan-avatar {
+            color: #66BB6A;
+        }
+
+        .shuttle-avatar.casey-avatar {
+            color: #F06292;
+        }
+
+        .shuttle-legs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+            gap: 8px;
+        }
+
+        .shuttle-leg {
+            padding: 8px 10px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #777;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .shuttle-leg[data-direction="out"] {
+            box-shadow: inset 0 -3px 0 rgba(255, 213, 79, 0.35);
+        }
+
+        .shuttle-leg[data-direction="back"] {
+            box-shadow: inset 0 -3px 0 rgba(244, 67, 54, 0.35);
+        }
+
+        .shuttle-leg.active-leg {
+            border-color: rgba(255, 213, 79, 0.55);
+            color: #fff;
+            background: rgba(255, 213, 79, 0.1);
+        }
+
+        .shuttle-leg.completed-leg {
+            opacity: 0.42;
         }
 
         .timeline-label {
@@ -634,21 +950,292 @@
             opacity: 0.8;
         }
 
+        .strategy-rules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .rule-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid #333;
+            background: rgba(26, 26, 26, 0.85);
+            color: #bbb;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+        }
+
+        .rules-audit {
+            margin: -8px 0 28px;
+            padding: 16px;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            background: rgba(18, 18, 18, 0.76);
+        }
+
+        .rules-audit-title {
+            margin-bottom: 12px;
+            color: #ffffff;
+            font-size: 0.78rem;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .rules-audit-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .rules-audit-item {
+            min-height: 100%;
+            padding: 10px 12px;
+            border-left: 3px solid #4FC3F7;
+            background: rgba(255, 255, 255, 0.04);
+            color: #cfcfcf;
+            font-size: 0.76rem;
+            line-height: 1.45;
+        }
+
+        .rules-audit-item strong {
+            display: block;
+            margin-bottom: 3px;
+            color: #ffffff;
+            font-size: 0.72rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .rules-audit-item.warning {
+            border-left-color: #FFD54F;
+        }
+
+        .rules-source {
+            margin: -20px 0 28px;
+            text-align: center;
+            color: #666;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .rules-source a {
+            color: #888;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(136, 136, 136, 0.35);
+        }
+
+        .race-flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 32px;
+            padding: 16px;
+            overflow-x: auto;
+            border: 1px solid #2a2a2a;
+            border-radius: 16px;
+            background: rgba(18, 18, 18, 0.8);
+            scrollbar-width: thin;
+            scrollbar-color: #4FC3F7 #1a1a1a;
+        }
+
+        .flow-step {
+            position: relative;
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 42px;
+            padding: 10px 14px;
+            border: 1px solid #333;
+            border-radius: 999px;
+            color: #ddd;
+            background: rgba(10, 10, 10, 0.75);
+            font-size: 0.78rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .flow-step:not(:last-child)::after {
+            content: "\2192";
+            position: absolute;
+            right: -15px;
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .flow-step.run-step {
+            border-color: rgba(255, 193, 7, 0.3);
+            color: #FFD54F;
+        }
+
+        .flow-step.workout-step {
+            border-color: rgba(79, 195, 247, 0.3);
+            color: #4FC3F7;
+        }
+
+        .flow-step.finish-step {
+            border-color: rgba(102, 187, 106, 0.4);
+            color: #66BB6A;
+        }
+
+        .flow-code,
+        .station-code {
+            display: inline-grid;
+            place-items: center;
+            min-width: 34px;
+            height: 22px;
+            flex: 0 0 auto;
+            padding: 0 7px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.08);
+            color: #ddd;
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            line-height: 1;
+        }
+
+        .parallel-run {
+            display: grid;
+            gap: 10px;
+        }
+
+        .parallel-run::before {
+            content: "START -> FINISH";
+            justify-self: end;
+            color: #666;
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+
+        .parallel-lanes {
+            display: grid;
+            gap: 8px;
+        }
+
+        .parallel-lane {
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background: rgba(10, 10, 10, 0.65);
+        }
+
+        .parallel-lane.primary-lane {
+            border-color: rgba(255, 213, 79, 0.35);
+            background: rgba(255, 213, 79, 0.06);
+        }
+
+        .lane-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .lane-label::after {
+            content: attr(data-role);
+            display: block;
+            margin-top: 2px;
+            color: #777;
+            font-size: 0.48rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+        }
+
+        .lane-track {
+            position: relative;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: visible;
+        }
+
+        .lane-track::after {
+            content: attr(data-runner);
+            position: absolute;
+            top: 50%;
+            left: var(--lane-progress, 0%);
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -50%);
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            background: #111;
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 900;
+            transition: left 50ms linear;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .lane-fill {
+            width: var(--lane-progress, 0%);
+            height: 100%;
+            border-radius: 999px;
+            transition: width 50ms linear;
+        }
+
+        .lane-distance {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        .parallel-lane.jordan-lane .lane-label {
+            color: #66BB6A;
+        }
+
+        .parallel-lane.jordan-lane .lane-fill {
+            background: linear-gradient(90deg, rgba(76, 175, 80, 0.45) 0%, #4CAF50 100%);
+        }
+
+        .parallel-lane.jordan-lane .lane-track::after {
+            color: #66BB6A;
+        }
+
+        .parallel-lane.casey-lane .lane-label {
+            color: #F06292;
+        }
+
+        .parallel-lane.casey-lane .lane-fill {
+            background: linear-gradient(90deg, rgba(233, 30, 99, 0.45) 0%, #E91E63 100%);
+        }
+
+        .parallel-lane.casey-lane .lane-track::after {
+            color: #F06292;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.2rem;
             }
-            
+
             .station-row {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                grid-template-columns: 56px minmax(0, 1fr) 56px;
+                gap: 8px;
             }
-            
+
             .time-marker, .cumulative-time {
-                justify-self: center;
-                width: fit-content;
+                justify-self: stretch;
+                width: auto;
+                padding: 8px 6px;
+                font-size: 0.75rem;
             }
-            
+
             .athlete-splits {
                 grid-template-columns: 1fr;
                 gap: 6px;
@@ -657,31 +1244,193 @@
             .station-card {
                 padding: 16px;
             }
+
+            .parallel-lane {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-segment {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline-segment::before {
+                content: "START -> FINISH";
+                justify-self: end;
+            }
+
+            .timeline-segment::after {
+                content: none;
+            }
+
+            .rules-audit-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .race-flow {
+                margin-bottom: 24px;
+                padding: 12px;
+            }
+        }
+
+        @media (max-width: 480px), (max-height: 760px) {
+            .podium-container {
+                gap: 12px;
+                padding: 18px;
+            }
+
+            .trophy {
+                margin-bottom: 4px;
+                padding: 8px 12px;
+                font-size: 0.72rem;
+            }
+
+            .victory-title {
+                margin-bottom: 8px;
+                font-size: 1.55rem;
+                letter-spacing: 0.08em;
+            }
+
+            .podium {
+                margin-bottom: 8px;
+            }
+
+            .podium-base.first {
+                width: 64px;
+                height: 72px;
+            }
+
+            .podium-base.second {
+                width: 58px;
+                height: 56px;
+            }
+
+            .podium-winner {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+
+            .victory-stats {
+                gap: 14px;
+                margin-top: 8px;
+            }
+
+            .stat-value {
+                font-size: 1.25rem;
+            }
+
+            .stat-label {
+                font-size: 0.68rem;
+            }
+
+            .close-celebration {
+                margin-top: 8px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.001ms !important;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Hyrox Mixed Doubles</h1>
-            <p class="subtitle">Berto & Katy's Strategy</p>
+            <h1>Hyrox Men's Doubles Open</h1>
+            <p class="subtitle">Jordan & Casey's Open Strategy</p>
         </div>
 
         <div class="target-time">
-            Target: 57:15 + 5min ROX Zone
+            <div class="target-primary">On-course target: 52:20</div>
+            <div class="target-secondary">Projected chip target: ~57:20 including ROX Zone</div>
+            <div class="target-budget" aria-label="Race budget breakdown">
+                <span class="budget-chip">Run budget: 30:50</span>
+                <span class="budget-chip">Station budget: 21:30</span>
+                <span class="budget-chip">ROX Zone buffer: ~5:00</span>
+            </div>
         </div>
 
         <div class="animation-controls">
-            <button id="playButton" class="play-btn">
-                <div class="play-icon">▶</div>
+            <button id="playButton" class="play-btn" type="button">
+                <div class="play-icon">PLAY</div>
                 <span>Start Race Animation</span>
             </button>
+            <button id="resetButton" class="reset-btn" type="button">Reset</button>
             <div id="raceTimer" class="race-timer">00:00</div>
         </div>
 
-        <div id="runnerAvatars" class="runner-avatars">
-            <div class="runner-avatar berto">B</div>
-            <div class="runner-avatar katy">K</div>
+        <div class="race-progress-panel">
+            <div class="race-progress-meta">
+                <span>START</span>
+                <span>RACE PROGRESS</span>
+                <span>FINISH</span>
+            </div>
+            <div class="race-progress-track">
+                <div id="raceProgressFill" class="race-progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="strategy-rules">
+            <div class="rule-chip">Shanghai: Doubles Men is listed for May 17, 2026</div>
+            <div class="rule-chip">Runs: both athletes complete every 1km together</div>
+            <div class="rule-chip">Stations: YGIG, partner stays in station</div>
+            <div class="rule-chip">Finish: Wall Balls is the final station</div>
+        </div>
+
+        <div class="rules-source">
+            Last checked: Apr 24, 2026 | Open Men's Doubles | <a href="https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf" target="_blank" rel="noopener">HYROX 25/26 Doubles Rulebook</a>. Shanghai laps and venue layout still need the event technical briefing.
+        </div>
+
+        <div class="rules-audit" aria-label="Shanghai rule check">
+            <div class="rules-audit-title">Shanghai Rule Check</div>
+            <div class="rules-audit-grid">
+                <div class="rules-audit-item">
+                    <strong>Race Structure</strong>
+                    8 x 1km runs plus Ski Erg, Sled Push, Sled Pull, Burpee Broad Jumps, Row, Farmers Carry, Sandbag Lunges, and Wall Balls.
+                </div>
+                <div class="rules-audit-item">
+                    <strong>Men's Open Weights</strong>
+                    Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
+                </div>
+                <div class="rules-audit-item warning">
+                    <strong>Team Separation</strong>
+                    Both athletes must stay within 5 seconds of each other, enter/exit stations together, and only start a workout once both are present.
+                </div>
+                <div class="rules-audit-item warning">
+                    <strong>Shanghai TBA Items</strong>
+                    The official event page currently marks race schedule details and running laps as TBA, so update this plan after the Shanghai athlete guide is released.
+                </div>
+                <div class="rules-audit-item warning">
+                    <strong>Open Scope</strong>
+                    This simulator is built for Men's Open Doubles weights and pacing. Do not reuse the loads for Pro without rebuilding the station plan.
+                </div>
+            </div>
+        </div>
+
+        <div class="race-flow" aria-label="Men's Doubles race flow">
+            <div class="flow-step run-step"><span class="flow-code">R1</span>Run 1</div>
+            <div class="flow-step workout-step"><span class="flow-code">SKI</span>Ski Erg</div>
+            <div class="flow-step run-step"><span class="flow-code">R2</span>Run 2</div>
+            <div class="flow-step workout-step"><span class="flow-code">PUSH</span>Sled Push</div>
+            <div class="flow-step run-step"><span class="flow-code">R3</span>Run 3</div>
+            <div class="flow-step workout-step"><span class="flow-code">PULL</span>Sled Pull</div>
+            <div class="flow-step run-step"><span class="flow-code">R4</span>Run 4</div>
+            <div class="flow-step workout-step"><span class="flow-code">BRP</span>Burpees</div>
+            <div class="flow-step run-step"><span class="flow-code">R5</span>Run 5</div>
+            <div class="flow-step workout-step"><span class="flow-code">ROW</span>Row</div>
+            <div class="flow-step run-step"><span class="flow-code">R6</span>Run 6</div>
+            <div class="flow-step workout-step"><span class="flow-code">CARRY</span>Carry</div>
+            <div class="flow-step run-step"><span class="flow-code">R7</span>Run 7</div>
+            <div class="flow-step workout-step"><span class="flow-code">LUNGE</span>Lunges</div>
+            <div class="flow-step run-step"><span class="flow-code">R8</span>Run 8</div>
+            <div class="flow-step finish-step"><span class="flow-code">WB</span>Wall Balls</div>
         </div>
 
         <div id="victoryCelebration" class="victory-celebration">
@@ -695,435 +1444,598 @@
             <div class="confetti" style="left: 70%; animation-delay: 1.8s;"></div>
             <div class="confetti" style="left: 80%; animation-delay: 2.1s;"></div>
             <div class="confetti" style="left: 90%; animation-delay: 2.4s;"></div>
-            
+
             <div class="podium-container">
-                <div class="trophy">🏆</div>
-                <div class="victory-title">Race Complete!</div>
-                
-                <div class="podium">
-                    <div class="podium-step">
-                        <div class="podium-winner katy">K</div>
-                        <div class="podium-base second">2nd</div>
-                    </div>
-                    <div class="podium-step">
-                        <div class="podium-winner berto">B</div>
-                        <div class="podium-base first">1st</div>
+                <div class="trophy">FINISH</div>
+                <div class="victory-title">Team Finish</div>
+
+                <div class="podium team-podium">
+                    <div class="podium-step team-step">
+                        <div class="team-winners">
+                            <div class="podium-winner jordan">J</div>
+                            <div class="podium-winner casey">C</div>
+                        </div>
+                        <div class="podium-base team-base">Jordan + Casey</div>
                     </div>
                 </div>
-                
+
                 <div class="victory-stats">
                     <div class="stat-item">
-                        <div class="stat-value">57:15</div>
-                        <div class="stat-label">Target Time</div>
+                        <div class="stat-value">52:20</div>
+                        <div class="stat-label">On-Course Finish</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-value">17</div>
-                        <div class="stat-label">Stations</div>
+                        <div class="stat-value">~57:20</div>
+                        <div class="stat-label">Projected Chip</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value">8km</div>
-                        <div class="stat-label">Running</div>
+                        <div class="stat-label">Running Together</div>
                     </div>
                 </div>
-                
+
                 <button class="close-celebration" onclick="closeCelebration()">
-                    Continue Training 💪
+                    Continue Training
                 </button>
             </div>
         </div>
 
         <div class="timeline">
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">0:00</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">1000m</div>
-                        <div class="special-notes">Each running 1km</div>
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Both athletes complete the full run side by side before entering Ski Erg.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">3:50</div>
             </div>
 
             <!-- Ski Erg -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="1000">
                 <div class="time-marker">3:50</div>
                 <div class="station-card">
+                    <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Ski Erg</div>
+                        <div class="station-title"><span class="station-code">SKI</span>Ski Erg</div>
                         <div class="station-duration workout-segment">3:30</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">1000m @ 6</div>
+                        <div class="distance-info">1000m total</div>
                         <div class="timeline-segment">
                             <div class="timeline-track">
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">200m</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">200m</div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">200m</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">200m</div>
-                                </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">200m</div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
                             </div>
                         </div>
+                        <div class="special-notes">Alternate every 250m so only one athlete works at a time.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">7:20</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">7:20</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Stay paired through the full kilometer before the sled push.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">11:10</div>
             </div>
 
             <!-- Sled Push -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="800">
                 <div class="time-marker">11:10</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Sled Push</div>
+                        <div class="station-title"><span class="station-code">PUSH</span>Sled Push</div>
                         <div class="station-duration workout-segment">1:35</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">50m (4 sets of 12.5m)</div>
-                        <div class="athlete-splits">
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 1 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                        <div class="distance-info">50m total</div>
+                        <div class="shuttle-course" style="--lane-size: 220px;">
+                            <div class="shuttle-meta">
+                                <span>START</span>
+                                <span>12.5M LANE</span>
+                                <span>TURN</span>
                             </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 2 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                            <div class="shuttle-lane">
+                                <div class="shuttle-line"></div>
+                                <div class="shuttle-end start">S</div>
+                                <div class="shuttle-end turn">T</div>
+                                <div class="shuttle-avatar active-avatar jordan-avatar">J</div>
+                                <div class="shuttle-avatar waiting-avatar casey-avatar">C</div>
                             </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 3 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
-                            </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 4 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                            <div class="shuttle-legs">
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="back">J back 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="out">C out 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 12.5m</div>
                             </div>
                         </div>
+                        <div class="special-notes">Official structure: 50m total, 4 lengths of 12.5m. Use 25m/25m to reduce handoff time; the resting partner stays behind the sled inside the station.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">12:45</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">12:45</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Reset together and arrive at sled pull at the same time.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">16:35</div>
             </div>
 
             <!-- Sled Pull -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="1000">
                 <div class="time-marker">16:35</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Sled Pull</div>
+                        <div class="station-title"><span class="station-code">PULL</span>Sled Pull</div>
                         <div class="station-duration workout-segment">2:30</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">50m (4 sets of 12.5m)</div>
-                        <div class="athlete-splits">
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 1 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                        <div class="distance-info">50m total</div>
+                        <div class="shuttle-course" style="--lane-size: 220px;">
+                            <div class="shuttle-meta">
+                                <span>START</span>
+                                <span>12.5M LANE</span>
+                                <span>TURN</span>
                             </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 2 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                            <div class="shuttle-lane">
+                                <div class="shuttle-line"></div>
+                                <div class="shuttle-end start">S</div>
+                                <div class="shuttle-end turn">T</div>
+                                <div class="shuttle-avatar active-avatar jordan-avatar">J</div>
+                                <div class="shuttle-avatar waiting-avatar casey-avatar">C</div>
                             </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 3 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
-                            </div>
-                            <div class="set-breakdown">
-                                <div class="set-info">Set 4 (12.5m):</div>
-                                <div class="athlete-assignment berto">Berto: 60% (7.5m)</div>
-                                <div class="athlete-assignment katy">Katy: 40% (5m)</div>
+                            <div class="shuttle-legs">
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="back">J back 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="out">C out 12.5m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 12.5m</div>
                             </div>
                         </div>
+                        <div class="special-notes">Official structure: 50m total, 4 pulls of 12.5m. Use 25m/25m to avoid extra rope handoffs; complete each pull past the marked line before changing.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">19:05</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1400">
                 <div class="time-marker">19:05</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">4:00</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Keep the pace shared through the burpee entry.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">23:05</div>
             </div>
 
             <!-- Burpee Broad Jumps -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="900">
                 <div class="time-marker">23:05</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Burpee Broad Jumps</div>
+                        <div class="station-title"><span class="station-code">BRP</span>Burpee Broad Jumps</div>
                         <div class="station-duration workout-segment">2:05</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">80m</div>
-                        <div class="athlete-splits">
-                            <div class="special-notes">Switch every 5-7</div>
+                        <div class="distance-info">80m total; target handoff about every 10m</div>
+                        <div class="shuttle-course" style="--lane-size: 220px;">
+                            <div class="shuttle-meta">
+                                <span>START</span>
+                                <span>SECTION LENGTH BY VENUE</span>
+                                <span>TURN</span>
+                            </div>
+                            <div class="shuttle-lane">
+                                <div class="shuttle-line"></div>
+                                <div class="shuttle-end start">S</div>
+                                <div class="shuttle-end turn">T</div>
+                                <div class="shuttle-avatar active-avatar jordan-avatar">J</div>
+                                <div class="shuttle-avatar waiting-avatar casey-avatar">C</div>
+                            </div>
+                            <div class="shuttle-legs">
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 10m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 10m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 10m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 10m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 10m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 10m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 10m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C finish 10m</div>
+                            </div>
                         </div>
+                        <div class="special-notes">Official distance is 80m total. The 10m markers here are handoff targets, not the fixed lane length; follow the Shanghai venue lines and judge instructions.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">25:10</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">25:10</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Run together into the row station.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">29:00</div>
             </div>
 
             <!-- Rowing -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="1400">
                 <div class="time-marker">29:00</div>
                 <div class="station-card">
+                    <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Rowing</div>
+                        <div class="station-title"><span class="station-code">ROW</span>Rowing</div>
                         <div class="station-duration workout-segment">4:05</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">1000m @ 6</div>
+                        <div class="distance-info">1000m total</div>
                         <div class="timeline-segment">
                             <div class="timeline-track">
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">300m</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">250-300m</div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">400m</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
+                                    <div class="timeline-distance">250m</div>
+                                </div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
+                                    <div class="timeline-distance">250m</div>
                                 </div>
                             </div>
                         </div>
+                        <div class="special-notes">Take clean 250m turns so the effort stays sequential.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">33:05</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">33:05</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Stay connected on the run before farmers carry.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">36:55</div>
             </div>
 
             <!-- Farmers Carry -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="800">
                 <div class="time-marker">36:55</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Farmers Carry</div>
+                        <div class="station-title"><span class="station-code">CARRY</span>Farmers Carry</div>
                         <div class="station-duration workout-segment">1:35</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">200m</div>
-                        <div class="timeline-segment">
-                            <div class="timeline-track">
-                                <div class="timeline-block berto-block" style="flex: 2;">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">80m</div>
-                                </div>
-                                <div class="timeline-block katy-block" style="flex: 1.5;">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">60-70m</div>
-                                </div>
-                                <div class="timeline-block berto-block" style="flex: 1.25;">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">50m</div>
-                                </div>
+                        <div class="distance-info">200m total</div>
+                        <div class="shuttle-course" style="--lane-size: 520px;">
+                            <div class="shuttle-meta">
+                                <span>START</span>
+                                <span>50M CARRY LANE</span>
+                                <span>TURN</span>
+                            </div>
+                            <div class="shuttle-lane">
+                                <div class="shuttle-line"></div>
+                                <div class="shuttle-end start">S</div>
+                                <div class="shuttle-end turn">T</div>
+                                <div class="shuttle-avatar active-avatar jordan-avatar">J</div>
+                                <div class="shuttle-avatar waiting-avatar casey-avatar">C</div>
+                            </div>
+                            <div class="shuttle-legs">
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 50m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="back">J back 50m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="out">C out 50m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C finish 50m</div>
                             </div>
                         </div>
+                        <div class="special-notes">200m total as 100m/100m to reduce grip-reset and handoff time. Confirm Shanghai turns and handoff points from the athlete guide.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">38:30</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">38:30</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Run together all the way into sandbag lunges.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">42:20</div>
             </div>
 
             <!-- Sandbag Lunges -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="1000">
                 <div class="time-marker">42:20</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Sandbag Lunges</div>
+                        <div class="station-title"><span class="station-code">LUNGE</span>Sandbag Lunges</div>
                         <div class="station-duration workout-segment">2:30</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">100m</div>
-                        <div class="timeline-segment">
-                            <div class="timeline-track">
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">40m</div>
-                                </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">40m</div>
-                                </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
-                                    <div class="timeline-distance">20m</div>
-                                </div>
+                        <div class="distance-info">100m total</div>
+                        <div class="shuttle-course" style="--lane-size: 360px;">
+                            <div class="shuttle-meta">
+                                <span>START</span>
+                                <span>25M LUNGE LANE</span>
+                                <span>TURN</span>
+                            </div>
+                            <div class="shuttle-lane">
+                                <div class="shuttle-line"></div>
+                                <div class="shuttle-end start">S</div>
+                                <div class="shuttle-end turn">T</div>
+                                <div class="shuttle-avatar active-avatar jordan-avatar">J</div>
+                                <div class="shuttle-avatar waiting-avatar casey-avatar">C</div>
+                            </div>
+                            <div class="shuttle-legs">
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 25m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C back 25m</div>
+                                <div class="shuttle-leg" data-athlete="jordan" data-short="J" data-direction="out">J out 25m</div>
+                                <div class="shuttle-leg" data-athlete="casey" data-short="C" data-direction="back">C finish 25m</div>
                             </div>
                         </div>
+                        <div class="special-notes">100m total with section turns. Each athlete works one lane section while the partner waits at the handoff end.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">44:50</div>
             </div>
 
             <!-- 1km Run -->
-            <div class="station-row">
+            <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">44:50</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">1km Run</div>
+                        <div class="station-title"><span class="station-code">RUN</span>1km Run</div>
                         <div class="station-duration run-segment">3:50</div>
+                    </div>
+                    <div class="station-details">
+                        <div class="distance-info">1000m together</div>
+                        <div class="parallel-run">
+                            <div class="parallel-lanes">
+                                <div class="parallel-lane jordan-lane">
+                                    <div class="lane-label">Jordan</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                                <div class="parallel-lane casey-lane">
+                                    <div class="lane-label">Casey</div>
+                                    <div class="lane-track"><div class="lane-fill"></div></div>
+                                    <div class="lane-distance">1km</div>
+                                </div>
+                            </div>
+                            <div class="special-notes">Final shared run before the last station.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="cumulative-time">48:40</div>
             </div>
 
             <!-- Wall Balls -->
-            <div class="station-row">
+            <div class="station-row" data-animation-duration="1200">
                 <div class="time-marker">48:40</div>
                 <div class="station-card">
                     <div class="progress-indicator"></div>
                     <div class="station-header">
-                        <div class="station-title">Wall Balls</div>
+                        <div class="station-title"><span class="station-code">WB</span>Wall Balls</div>
                         <div class="station-duration workout-segment">3:40</div>
                     </div>
                     <div class="station-details">
-                        <div class="distance-info">100 reps (5 sets of 20)</div>
+                        <div class="distance-info">100 reps total</div>
                         <div class="timeline-segment">
                             <div class="timeline-track">
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
+                                    <div class="timeline-distance">10</div>
+                                </div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
                                     <div class="timeline-distance">20</div>
                                 </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
                                     <div class="timeline-distance">20</div>
                                 </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
                                     <div class="timeline-distance">20</div>
                                 </div>
-                                <div class="timeline-block berto-block">
-                                    <div class="timeline-label">Berto</div>
+                                <div class="timeline-block jordan-block">
+                                    <div class="timeline-label">Jordan</div>
                                     <div class="timeline-distance">20</div>
                                 </div>
-                                <div class="timeline-block katy-block">
-                                    <div class="timeline-label">Katy</div>
-                                    <div class="timeline-distance">20</div>
+                                <div class="timeline-block casey-block">
+                                    <div class="timeline-label">Casey</div>
+                                    <div class="timeline-distance">10</div>
                                 </div>
                             </div>
                         </div>
+                        <div class="station-alert">No-rep buffer: repeat any missed rep immediately; this is a judging reserve, not a planned work block.</div>
+                        <div class="special-notes">Final station: open with 10 reps, then switch in 20-rep sets; leave room to repeat any No rep immediately.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">52:20</div>
-            </div>
-
-            <!-- Final Run -->
-            <div class="station-row">
-                <div class="time-marker">52:20</div>
-                <div class="station-card">
-                    <div class="progress-indicator"></div>
-                    <div class="station-header">
-                        <div class="station-title">Final 1km Run</div>
-                        <div class="station-duration run-segment">4:55</div>
-                    </div>
-                    <div class="station-details">
-                        <div class="special-notes">FINISH STRONG</div>
-                    </div>
-                </div>
-                <div class="cumulative-time">57:15</div>
             </div>
         </div>
     </div>
@@ -1131,40 +2043,39 @@
     <script>
         // Race animation system
         document.addEventListener('DOMContentLoaded', function() {
-            const stationRows = document.querySelectorAll('.station-row');
+            const stationRows = Array.from(document.querySelectorAll('.station-row'));
+            const container = document.querySelector('.container');
             const playButton = document.getElementById('playButton');
+            const resetButton = document.getElementById('resetButton');
             const raceTimer = document.getElementById('raceTimer');
-            const runnerAvatars = document.getElementById('runnerAvatars');
+            const raceProgressFill = document.getElementById('raceProgressFill');
             const playIcon = playButton.querySelector('.play-icon');
             const playText = playButton.querySelector('span');
             
             let isPlaying = false;
             let currentStationIndex = 0;
             let raceStartTime = 0;
+            let stationStartTime = 0;
+            let pausedRaceElapsed = 0;
+            let pausedStationElapsed = 0;
             let animationInterval;
             let stationTimeout;
+            let scrollTicking = false;
             
-            // Race schedule with durations in milliseconds (20-second total animation - slower)
-            const raceSchedule = [
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Ski Erg", duration: 1000 },          // 1.0s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Sled Push", duration: 800 },         // 0.8s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Sled Pull", duration: 1000 },        // 1.0s
-                { name: "1km Run", duration: 1400 },          // 1.4s
-                { name: "Burpee Broad Jumps", duration: 900 }, // 0.9s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Rowing", duration: 1400 },           // 1.4s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Farmers Carry", duration: 800 },     // 0.8s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Sandbag Lunges", duration: 1000 },   // 1.0s
-                { name: "1km Run", duration: 1200 },          // 1.2s
-                { name: "Wall Balls", duration: 1200 },       // 1.2s
-                { name: "Final 1km Run", duration: 1600 }     // 1.6s (finish strong!)
-            ];
-            // Total: ~20 seconds
+            const animationSlowdown = 3;
+            const defaultSegmentDuration = 1200 * animationSlowdown;
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            const raceSchedule = stationRows.map((row) => ({
+                name: row.querySelector('.station-title')?.textContent.trim() || 'Station',
+                duration: (Number(row.dataset.animationDuration) || 1200) * animationSlowdown
+            }));
+            const totalAnimationDuration = raceSchedule.reduce((total, station) => total + station.duration, 0);
+            const finalCumulativeTime = stationRows[stationRows.length - 1]?.querySelector('.cumulative-time')?.textContent.trim() || '00:00';
+            const targetSeconds = parseTime(finalCumulativeTime);
+
+            configureRunLanes();
+            resetStationVisuals();
             
             // Initial entrance animation
             stationRows.forEach((row, index) => {
@@ -1178,98 +2089,249 @@
                 const secs = seconds % 60;
                 return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             }
+
+            function parseTime(timeString) {
+                const [minutes, seconds] = timeString.split(':').map(Number);
+                return (minutes * 60) + seconds;
+            }
+
+            function athleteClass(athlete) {
+                return athlete === 'casey' ? 'casey-avatar' : 'jordan-avatar';
+            }
+
+            function athleteDisplay(athlete) {
+                return athlete === 'casey' ? 'Casey' : 'Jordan';
+            }
+
+            function configureRunLanes() {
+                const runRows = stationRows.filter(row => row.classList.contains('run-row'));
+
+                runRows.forEach((row, index) => {
+                    const jordanLane = row.querySelector('.jordan-lane');
+                    const caseyLane = row.querySelector('.casey-lane');
+                    const leadAthlete = index % 2 === 0 ? 'jordan' : 'casey';
+
+                    [
+                        { lane: jordanLane, athlete: 'jordan', runner: 'J' },
+                        { lane: caseyLane, athlete: 'casey', runner: 'C' }
+                    ].forEach(({ lane, athlete, runner }) => {
+                        if (!lane) return;
+
+                        const isLead = athlete === leadAthlete;
+                        lane.classList.toggle('primary-lane', isLead);
+                        lane.style.order = isLead ? '0' : '1';
+                        lane.querySelector('.lane-label')?.setAttribute('data-role', isLead ? 'LEAD' : 'FOLLOW');
+                        lane.querySelector('.lane-track')?.setAttribute('data-runner', runner);
+                    });
+                });
+            }
+
+            function resetStationVisuals() {
+                stationRows.forEach(row => {
+                    row.style.setProperty('--lane-progress', '0%');
+                    row.querySelector('.station-card')?.style.setProperty('--card-progress', '0%');
+                    row.querySelectorAll('.timeline-block').forEach(block => {
+                        block.classList.remove('active-work', 'completed-work');
+                        block.removeAttribute('data-exchange');
+                    });
+                    row.querySelectorAll('.shuttle-leg').forEach(leg => {
+                        leg.classList.remove('active-leg', 'completed-leg');
+                    });
+                    updateShuttleCourse(row, 0);
+                });
+            }
+
+            function updateTimelineBlocks(row, stationProgress) {
+                const blocks = Array.from(row.querySelectorAll('.timeline-block'));
+                if (!blocks.length) return;
+
+                if (stationProgress >= 100) {
+                    blocks.forEach(block => {
+                        block.classList.add('completed-work');
+                        block.classList.remove('active-work');
+                    });
+                    return;
+                }
+
+                const rawIndex = Math.min((stationProgress / 100) * blocks.length, blocks.length - 0.001);
+                const activeIndex = Math.max(0, Math.floor(rawIndex));
+
+                blocks.forEach((block, index) => {
+                    block.classList.toggle('completed-work', index < activeIndex);
+                    block.classList.toggle('active-work', index === activeIndex);
+
+                    const nextBlock = blocks[index + 1];
+                    const activeName = block.querySelector('.timeline-label')?.textContent.trim() || 'Athlete';
+                    const nextName = nextBlock?.querySelector('.timeline-label')?.textContent.trim() || 'Finish';
+                    block.setAttribute('data-exchange', `${activeName} works / ${nextName} next`);
+                });
+            }
+
+            function updateShuttleCourse(row, stationProgress) {
+                const course = row.querySelector('.shuttle-course');
+                if (!course) return;
+
+                const legs = Array.from(course.querySelectorAll('.shuttle-leg'));
+                if (!legs.length) return;
+
+                if (stationProgress >= 100) {
+                    const lastLeg = legs[legs.length - 1];
+                    const direction = lastLeg.dataset.direction === 'back' ? 'back' : 'out';
+                    const activeLeft = direction === 'back' ? 0 : 100;
+                    const activeAthlete = lastLeg.dataset.athlete || 'jordan';
+                    const activeAvatar = course.querySelector('.active-avatar');
+                    const waitingAvatar = course.querySelector('.waiting-avatar');
+
+                    course.dataset.direction = direction;
+                    course.style.setProperty('--active-left', `${activeLeft}%`);
+                    course.style.setProperty('--waiting-left', `${activeLeft}%`);
+
+                    if (activeAvatar) {
+                        activeAvatar.textContent = lastLeg.dataset.short || activeAthlete.slice(0, 1).toUpperCase();
+                        activeAvatar.className = `shuttle-avatar active-avatar ${athleteClass(activeAthlete)}`;
+                    }
+
+                    if (waitingAvatar) {
+                        waitingAvatar.style.opacity = '0';
+                    }
+
+                    legs.forEach(leg => {
+                        leg.classList.add('completed-leg');
+                        leg.classList.remove('active-leg');
+                    });
+                    return;
+                }
+
+                const rawIndex = Math.min((stationProgress / 100) * legs.length, legs.length - 0.001);
+                const activeIndex = Math.max(0, Math.floor(rawIndex));
+                const legProgress = Math.max(0, Math.min((rawIndex - activeIndex) * 100, 100));
+                const activeLeg = legs[activeIndex];
+                const nextLeg = legs[activeIndex + 1];
+                const direction = activeLeg.dataset.direction === 'back' ? 'back' : 'out';
+                const activeLeft = direction === 'back' ? 100 - legProgress : legProgress;
+                const waitingLeft = direction === 'back' ? 0 : 100;
+                const activeAthlete = activeLeg.dataset.athlete || 'jordan';
+                const waitingAthlete = nextLeg?.dataset.athlete || (activeAthlete === 'jordan' ? 'casey' : 'jordan');
+                const activeAvatar = course.querySelector('.active-avatar');
+                const waitingAvatar = course.querySelector('.waiting-avatar');
+
+                course.dataset.direction = direction;
+                course.style.setProperty('--active-left', `${activeLeft}%`);
+                course.style.setProperty('--waiting-left', `${waitingLeft}%`);
+
+                if (activeAvatar) {
+                    activeAvatar.textContent = activeLeg.dataset.short || activeAthlete.slice(0, 1).toUpperCase();
+                    activeAvatar.className = `shuttle-avatar active-avatar ${athleteClass(activeAthlete)}`;
+                    activeAvatar.setAttribute('title', `${athleteDisplay(activeAthlete)} working ${direction}`);
+                }
+
+                if (waitingAvatar) {
+                    waitingAvatar.style.opacity = '';
+                    waitingAvatar.textContent = nextLeg?.dataset.short || waitingAthlete.slice(0, 1).toUpperCase();
+                    waitingAvatar.className = `shuttle-avatar waiting-avatar ${athleteClass(waitingAthlete)}`;
+                    waitingAvatar.setAttribute('title', `${athleteDisplay(waitingAthlete)} waiting at handoff`);
+                }
+
+                legs.forEach((leg, index) => {
+                    leg.classList.toggle('completed-leg', index < activeIndex);
+                    leg.classList.toggle('active-leg', index === activeIndex);
+                });
+            }
             
             function updateTimer() {
                 if (!isPlaying) return;
                 
-                // Show animated timer that goes from 0 to target time over ~20 seconds
-                const elapsed = Math.floor((Date.now() - raceStartTime) / 200); // Slower progression
-                const displaySeconds = Math.min(elapsed, 3435); // Cap at target time (57:15)
+                const elapsed = Math.max(Date.now() - raceStartTime, 0);
+                const progress = totalAnimationDuration > 0 ? Math.min(elapsed / totalAnimationDuration, 1) : 1;
+                const displaySeconds = Math.round(progress * targetSeconds);
                 raceTimer.textContent = formatTime(displaySeconds);
+                raceProgressFill.style.setProperty('--race-progress', `${progress * 100}%`);
+
+                const currentRow = stationRows[currentStationIndex];
+                if (!currentRow) return;
+
+                const duration = raceSchedule[currentStationIndex]?.duration || defaultSegmentDuration;
+                const stationElapsed = Math.max(Date.now() - stationStartTime, 0);
+                const stationProgress = Math.min(stationElapsed / duration, 1) * 100;
+                currentRow.querySelector('.station-card')?.style.setProperty('--card-progress', `${stationProgress}%`);
+
+                if (currentRow.classList.contains('run-row')) {
+                    currentRow.style.setProperty('--lane-progress', `${stationProgress}%`);
+                }
+
+                updateTimelineBlocks(currentRow, stationProgress);
+                updateShuttleCourse(currentRow, stationProgress);
+            }
+
+            function positionRunnersAtProgress(index, stationProgress, transitionDuration = 0) {
+                const row = stationRows[index];
+                if (!row) return;
+
+                const stationCard = row.querySelector('.station-card');
+                if (!stationCard) return;
+
+                const cardRect = stationCard.getBoundingClientRect();
+                const containerRect = container.getBoundingClientRect();
+                const topOffset = cardRect.top - containerRect.top + (cardRect.height / 2) - 14;
+                const startLeftOffset = cardRect.left - containerRect.left + 12;
             }
             
-            function moveRunnersToStation(index) {
+            function moveRunnersToStation(index, startingElapsed = 0) {
                 if (index >= stationRows.length) return;
                 
                 const row = stationRows[index];
                 const stationCard = row.querySelector('.station-card');
-                
-                // Position avatars at the start of the current station card
-                const cardRect = stationCard.getBoundingClientRect();
-                const timelineRect = document.querySelector('.timeline').getBoundingClientRect();
-                
-                const topOffset = cardRect.top - timelineRect.top + (cardRect.height / 2);
-                const startLeftOffset = cardRect.left - timelineRect.left + 10; // Very left edge
-                
-                // Move avatars to the start of the current station (far left)
-                runnerAvatars.style.transform = `translate(${startLeftOffset}px, ${topOffset - 50}px)`;
-                
-                // Add running animation
-                const avatars = runnerAvatars.querySelectorAll('.runner-avatar');
-                avatars.forEach(avatar => avatar.classList.add('running'));
-                
-                // Remove previous current station
+                const duration = raceSchedule[index]?.duration || defaultSegmentDuration;
+                const clampedElapsed = Math.max(0, Math.min(startingElapsed, duration));
+                const stationProgress = duration > 0 ? (clampedElapsed / duration) * 100 : 100;
+                const remainingDuration = Math.max(duration - clampedElapsed, 0);
+                stationStartTime = Date.now() - clampedElapsed;
+                stationCard.style.setProperty('--card-progress', `${stationProgress}%`);
+                row.style.setProperty('--lane-progress', `${stationProgress}%`);
+                updateTimelineBlocks(row, stationProgress);
+                updateShuttleCourse(row, stationProgress);
+
                 stationRows.forEach(r => r.classList.remove('current'));
-                
-                // Highlight current station
                 row.classList.add('current');
-                
-                // Animate runners moving across the station card
-                const duration = raceSchedule[index]?.duration || 1200;
-                const cardWidth = cardRect.width - 80; // Leave margin for avatar size
-                const endLeftOffset = startLeftOffset + cardWidth;
-                
-                setTimeout(() => {
-                    // Move to the far right of the station card
-                    runnerAvatars.style.transform = `translate(${endLeftOffset}px, ${topOffset - 50}px)`;
-                }, 50); // Very small delay to show start position
-                
-                // Start progress animation
-                stationCard.style.setProperty('--duration', `${duration}ms`);
-                stationCard.classList.add('progressing');
+                stationCard.style.setProperty('--duration', `${remainingDuration}ms`);
             }
             
             function startRaceAnimation() {
                 if (isPlaying) {
                     // Pause
+                    const now = Date.now();
+                    const currentDuration = raceSchedule[currentStationIndex]?.duration || defaultSegmentDuration;
+                    pausedRaceElapsed = Math.min(Math.max(now - raceStartTime, 0), totalAnimationDuration);
+                    pausedStationElapsed = Math.min(Math.max(now - stationStartTime, 0), currentDuration);
                     isPlaying = false;
                     clearInterval(animationInterval);
                     clearTimeout(stationTimeout);
                     
-                    playIcon.textContent = '▶';
+                    playIcon.textContent = 'PLAY';
                     playText.textContent = 'Resume Race';
                     playButton.classList.remove('playing');
-                    
-                    // Stop running animation
-                    const avatars = runnerAvatars.querySelectorAll('.runner-avatar');
-                    avatars.forEach(avatar => avatar.classList.remove('running'));
                     
                     return;
                 }
                 
+                if (currentStationIndex >= stationRows.length) {
+                    resetRace();
+                }
+
                 // Start/Resume
                 isPlaying = true;
+                raceStartTime = Date.now() - pausedRaceElapsed;
                 
-                if (currentStationIndex === 0) {
-                    raceStartTime = Date.now();
-                    runnerAvatars.classList.add('active');
-                } else {
-                    // Adjust start time for resume
-                    const elapsedStations = raceSchedule.slice(0, currentStationIndex);
-                    const elapsedTime = elapsedStations.reduce((total, station) => total + station.duration, 0);
-                    raceStartTime = Date.now() - elapsedTime; // Already in milliseconds
-                }
-                
-                playIcon.textContent = '⏸';
+                playIcon.textContent = 'PAUSE';
                 playText.textContent = 'Pause Race';
                 playButton.classList.add('playing');
                 
-                // Start timer (faster updates for smooth animation)
-                animationInterval = setInterval(updateTimer, 50);
-                updateTimer();
-                
                 // Continue from current station
                 animateNextStation();
+
+                // Start timer after station positioning so progress begins at the left edge.
+                animationInterval = setInterval(updateTimer, 50);
+                updateTimer();
             }
             
             function animateNextStation() {
@@ -1278,13 +2340,13 @@
                     isPlaying = false;
                     clearInterval(animationInterval);
                     
-                    playIcon.textContent = '🏁';
+                    playIcon.textContent = 'DONE';
                     playText.textContent = 'Race Complete!';
                     playButton.classList.remove('playing');
-                    
-                    // Stop running animation
-                    const avatars = runnerAvatars.querySelectorAll('.runner-avatar');
-                    avatars.forEach(avatar => avatar.classList.remove('running'));
+                    raceTimer.textContent = formatTime(targetSeconds);
+                    raceProgressFill.style.setProperty('--race-progress', '100%');
+                    pausedRaceElapsed = totalAnimationDuration;
+                    pausedStationElapsed = 0;
                     
                     // Show victory celebration after a brief delay
                     setTimeout(() => {
@@ -1294,31 +2356,41 @@
                     return;
                 }
                 
-                moveRunnersToStation(currentStationIndex);
-                
-                const duration = raceSchedule[currentStationIndex]?.duration || 600;
+                const duration = raceSchedule[currentStationIndex]?.duration || defaultSegmentDuration;
+                const startingElapsed = Math.min(pausedStationElapsed, duration);
+                const remainingDuration = Math.max(duration - startingElapsed, 0);
+                moveRunnersToStation(currentStationIndex, startingElapsed);
                 
                 stationTimeout = setTimeout(() => {
                     if (isPlaying) {
+                        const completedRow = stationRows[currentStationIndex];
+                        completedRow?.querySelector('.station-card')?.style.setProperty('--card-progress', '100%');
+                        completedRow?.style.setProperty('--lane-progress', '100%');
+                        updateTimelineBlocks(completedRow, 100);
+                        updateShuttleCourse(completedRow, 100);
                         currentStationIndex++;
+                        pausedStationElapsed = 0;
                         animateNextStation();
                     }
-                }, duration); // Duration is already in milliseconds
+                }, remainingDuration); // Duration is already in milliseconds
             }
             
             function resetRace() {
                 isPlaying = false;
                 currentStationIndex = 0;
+                raceStartTime = 0;
+                stationStartTime = 0;
+                pausedRaceElapsed = 0;
+                pausedStationElapsed = 0;
                 clearInterval(animationInterval);
                 clearTimeout(stationTimeout);
                 
                 // Reset UI
-                playIcon.textContent = '▶';
+                playIcon.textContent = 'PLAY';
                 playText.textContent = 'Start Race Animation';
                 playButton.classList.remove('playing');
                 raceTimer.textContent = '00:00';
-                runnerAvatars.classList.remove('active');
-                runnerAvatars.style.transform = 'translate(20px, -50px)'; // Reset to starting position
+                raceProgressFill.style.setProperty('--race-progress', '0%');
                 
                 // Hide victory celebration
                 document.getElementById('victoryCelebration').classList.remove('show');
@@ -1326,12 +2398,8 @@
                 // Reset stations
                 stationRows.forEach(row => {
                     row.classList.remove('current');
-                    row.querySelector('.station-card').classList.remove('progressing');
                 });
-                
-                // Stop running animation
-                const avatars = runnerAvatars.querySelectorAll('.runner-avatar');
-                avatars.forEach(avatar => avatar.classList.remove('running'));
+                resetStationVisuals();
             }
             
             function showVictoryCelebration() {
@@ -1353,16 +2421,21 @@
             
             // Event listeners
             playButton.addEventListener('click', startRaceAnimation);
+            resetButton.addEventListener('click', resetRace);
             
-            // Double-click to reset
-            playButton.addEventListener('dblclick', resetRace);
-            
-            // Add scroll parallax effect
-            window.addEventListener('scroll', () => {
-                const scrolled = window.pageYOffset;
-                const rate = scrolled * -0.1;
-                document.querySelector('.header').style.transform = `translateY(${rate}px)`;
-            });
+            if (!reduceMotion) {
+                window.addEventListener('scroll', () => {
+                    if (scrollTicking) return;
+
+                    scrollTicking = true;
+                    window.requestAnimationFrame(() => {
+                        const scrolled = window.pageYOffset;
+                        const rate = scrolled * -0.1;
+                        document.querySelector('.header').style.transform = `translateY(${rate}px)`;
+                        scrollTicking = false;
+                    });
+                });
+            }
         });
     </script>
 </body>
