@@ -1,14 +1,42 @@
 # HYROX Mixed Doubles Strategy
 
-Static race-day reference for Jordan & Casey's HYROX Mixed Doubles plan, with an animated station timeline and a rules checklist for the Shanghai event.
+A single-page planner for HYROX Mixed Doubles teams. Drop in your target time, partner names, and station splits, and the page renders an animated 16-segment timeline plus a rules checklist you can scan at a glance.
 
-## Current Target
+The current numbers are filled in for Jordan & Casey's plan around HYROX Shanghai 2026 as a worked example, but every section is meant to be edited for your own race and city.
+
+## What's on the page
+
+- **Animated 16-segment timeline** — 8 runs and 8 stations in race order with cumulative target times, so partners can agree on pacing before race day.
+- **Per-station partner split** — Ski Erg, Row, Sled Push/Pull, Burpees, Farmers Carry, Lunges, Wall Balls each show who does which share, in YGIG format.
+- **Rule checklist** — within-5s rule, station entry/exit together, Mixed Open weights, Wall Ball target heights, referenced against the current HYROX 25/26 Doubles Rulebook.
+
+## New here? Hover the Tips badge
+
+Each station header has a small `Tips` badge. Hover it on desktop, or tap it on mobile, and a small popover shows two things:
+
+- **Rule** — what the official rulebook says about that station (release the handle on Ski Erg, sled fully crosses the line on the push, no flying handoffs on Wall Balls, etc.).
+- **Coach tip** — a short, practical suggestion drawn from common Doubles strategy write-ups (switch the Ski Erg every 125–250m instead of 500/500; never push the sled solo for 25m; on Wall Balls work in 10–15 rep sets).
+
+This is mainly for first-time HYROX teams — it lets you understand what's legal and what's smart at each station without leaving the page.
+
+## Plan your own race
+
+1. Open `index.html` in a browser, or host it on GitHub Pages.
+2. Edit the team name and partner names in the page header.
+3. Update the target time block and per-station durations in `raceSchedule` to match your goal pace.
+4. Adjust the station split notes (e.g. Ski Erg 250/250/250/250, Sled Push 4 x 12.5m) to how your team plans to swap.
+5. Re-check the rule checklist against the latest [HYROX Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and your event's athlete guide.
+
+See `PLAN.md` for the full worked example (Jordan & Casey's 57:20 plan), which you can use as a reference when filling in your own numbers.
+
+## Example target (Jordan & Casey, HYROX Shanghai 2026)
 
 - On-course target: 52:20
 - ROX Zone allowance: about 5:00
 - Full race target: about 57:20
+- Event window: May 16–17, 2026. Wave time, lap count, and venue layout are still TBA — confirm them from the athlete guide before race day.
 
-## Official Race Structure
+## Official race structure
 
 Mixed Doubles is 8 x 1km runs plus 8 workout stations:
 
@@ -23,18 +51,22 @@ Mixed Doubles is 8 x 1km runs plus 8 workout stations:
 
 Both athletes complete every 1km run. Workout stations use YGIG format: one athlete works while the partner stays in the station.
 
-## Shanghai Rule Checks
+## Rule checks (verify against your event's athlete guide)
 
-- Shanghai is listed for May 16-17, 2026 on the official event page.
-- Confirm the exact Mixed Doubles wave time from the athlete guide before race day.
-- Shanghai race schedule details and running lap counts are still TBA, so confirm them from the athlete guide before race day.
 - Athletes must stay within 5 seconds of each other.
 - Both athletes must enter and leave workout stations together.
-- Mixed Doubles uses the Men/Mixed Open weights: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
+- Mixed Doubles uses Men/Mixed Open weights: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
 - Wall Ball targets differ by athlete: male athlete 3.00m, female athlete 2.70m.
+- Wave time, lap count, and venue layout vary by event — confirm them in your athlete guide.
 
-Sources: [current HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and the [official HYROX Shanghai event page](https://hyrox.com/event/hyrox-shanghai/).
+Sources: [HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and the [official HYROX events listing](https://hyrox.com/events/).
 
 ## Usage
 
-Open `index.html` directly in a browser.
+Open `index.html` directly in a browser. No dependencies, no build step.
+
+## Credits & contributions
+
+Built on top of [bertovmill/toronto_hyrox_2025](https://github.com/bertovmill/toronto_hyrox_2025); the timeline layout and animation come from that earlier work. Coach-tip wording draws on the public HYROX Doubles Rulebook and common community strategy write-ups (e.g. Rox Lyfe, Edge).
+
+Issues and PRs with corrections, additional rule checks, or other event venues are welcome — the goal is to make race-day planning a little easier for the next Mixed Doubles team.

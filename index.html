@@ -636,6 +636,143 @@
             letter-spacing: 0.01em;
         }
 
+        .station-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .coach-tip {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .coach-tip-trigger {
+            appearance: none;
+            background: rgba(255, 193, 7, 0.12);
+            color: #FFC107;
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            line-height: 1;
+            font-family: inherit;
+            transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+        }
+
+        .coach-tip-trigger::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #FFC107;
+            box-shadow: 0 0 6px rgba(255, 193, 7, 0.6);
+        }
+
+        .coach-tip:hover .coach-tip-trigger,
+        .coach-tip.open .coach-tip-trigger,
+        .coach-tip-trigger:focus-visible {
+            background: rgba(255, 193, 7, 0.22);
+            color: #FFE082;
+            border-color: rgba(255, 193, 7, 0.55);
+            outline: none;
+        }
+
+        .coach-tip-popover {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 320px;
+            max-width: 86vw;
+            background: #14151a;
+            border: 1px solid rgba(255, 193, 7, 0.35);
+            border-radius: 12px;
+            padding: 14px 16px;
+            z-index: 50;
+            box-shadow: 0 18px 32px rgba(0, 0, 0, 0.55);
+            color: #ddd;
+            font-size: 0.82rem;
+            line-height: 1.55;
+            text-align: left;
+            text-transform: none;
+            letter-spacing: 0;
+            font-style: normal;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-4px);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        .coach-tip:hover .coach-tip-popover,
+        .coach-tip.open .coach-tip-popover {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .coach-tip-popover::before {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: 18px;
+            width: 10px;
+            height: 10px;
+            background: #14151a;
+            border-left: 1px solid rgba(255, 193, 7, 0.35);
+            border-top: 1px solid rgba(255, 193, 7, 0.35);
+            transform: rotate(45deg);
+        }
+
+        .coach-tip-row {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .coach-tip-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .coach-tip-row strong {
+            display: block;
+            color: #FFC107;
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .coach-tip-row span {
+            display: block;
+            color: #e6e6e6;
+        }
+
+        .station-card:has(.coach-tip:hover),
+        .station-card:has(.coach-tip.open) {
+            overflow: visible;
+            z-index: 5;
+        }
+
+        @media (max-width: 600px) {
+            .coach-tip-popover {
+                width: 268px;
+                max-width: calc(100vw - 80px);
+                font-size: 0.78rem;
+            }
+
+            .coach-tip-trigger {
+                font-size: 0.62rem;
+                padding: 3px 8px;
+            }
+        }
+
         .run-segment {
             background: rgba(255, 193, 7, 0.15);
             border-color: rgba(255, 193, 7, 0.3);
@@ -1385,10 +1522,10 @@
         </div>
 
         <div class="rules-source">
-            Last checked: Apr 24, 2026 | Mixed Doubles | <a href="https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf" target="_blank" rel="noopener">HYROX 25/26 Doubles Rulebook</a>. Shanghai wave time, laps, and venue layout still need the event technical briefing.
+            Last checked: Apr 26, 2026 | Mixed Doubles | <a href="https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf" target="_blank" rel="noopener">HYROX 25/26 Doubles Rulebook</a>. Wave time, lap count, and venue layout vary by event &mdash; confirm them in your athlete guide before race day.
         </div>
 
-        <div class="rules-audit" aria-label="Shanghai rule check">
+        <div class="rules-audit" aria-label="Mixed Doubles rule check">
             <div class="rules-audit-title">Mixed Doubles Rule Check</div>
             <div class="rules-audit-grid">
                 <div class="rules-audit-item">
@@ -1408,8 +1545,8 @@
                     Both athletes must stay within 5 seconds of each other, enter/exit stations together, and only start a workout once both are present.
                 </div>
                 <div class="rules-audit-item warning">
-                    <strong>Shanghai TBA Items</strong>
-                    The official event page gives the May 16-17, 2026 event window. Update exact Mixed Doubles wave time, running laps, and venue map after the Shanghai athlete guide is released.
+                    <strong>Per-event TBA</strong>
+                    Confirm the exact Mixed Doubles wave time, running lap count, and venue map from your event's athlete guide before race day &mdash; these vary between cities.
                 </div>
                 <div class="rules-audit-item warning">
                     <strong>Mixed Scope</strong>
@@ -2074,8 +2211,48 @@
             const finalCumulativeTime = stationRows[stationRows.length - 1]?.querySelector('.cumulative-time')?.textContent.trim() || '00:00';
             const targetSeconds = parseTime(finalCumulativeTime);
 
+            const coachTips = {
+                RUN: {
+                    rule: 'Stay within 5 seconds of each other at all times. Both partners enter and leave every workout station together.',
+                    tip: 'Pace is set by the slower partner. Let the stronger runner take the last share at each station so the weaker partner gets longer rest before the next 1km.'
+                },
+                SKI: {
+                    rule: 'Release the handle fully before the partner takes over. No direct hand-to-hand pass.',
+                    tip: 'Skip the 500/500 split. Switch every 125-250m or every 30 seconds to keep power high before form breaks down.'
+                },
+                PUSH: {
+                    rule: '4 x 12.5m. The sled must fully cross the line before turning. Skipping a lane = 3 minute penalty.',
+                    tip: 'Push half a lane (~6.25m) up to one full lane (12.5m) per swap. A solo 25m push leaves your legs lead-heavy for the next run.'
+                },
+                PULL: {
+                    rule: 'The sled must come to a complete stop before switching. No rolling handoffs.',
+                    tip: 'One full lane (12.5m) per swap. If a partner has clear upper-body advantage, give them 3 of the 4 lanes.'
+                },
+                BRP: {
+                    rule: 'Resting partner must walk behind the working athlete. The next athlete starts with hands where the previous athlete\'s feet landed.',
+                    tip: 'Switch every 5-7 jumps (about 10-15m). Frequent enough to grab a breath before HR explodes.'
+                },
+                ROW: {
+                    rule: 'No passing the handle. No helping the partner with damper or footstraps.',
+                    tip: 'Footstrap reset is the slowest swap, so minimise it. Use 500/500 or 250/500/250. Bigger feet row first so smaller feet slide in without re-strapping.'
+                },
+                CARRY: {
+                    rule: 'Pass kettlebells sideways or backward. Never forward, and never let bells roll forward if set down.',
+                    tip: '100m / 100m. Grip does not recover quickly; hold on as long as you can before any reset.'
+                },
+                LUNGE: {
+                    rule: 'Sandbag stays on the shoulders. No forward pass. Setting it down in the changeover zone = 15 second penalty.',
+                    tip: '3-4 swaps (about 25m each). Practice back-to-back transfer or overhead-from-behind handoff before race day.'
+                },
+                WB: {
+                    rule: 'No flying handoff. Catching mid-squat is a no-rep. The ball must hit the ground or be passed hand-to-hand.',
+                    tip: 'Sets of 10-15. Resting partner stands under the rack so the swap is near-zero. Squat below parallel every rep, no-reps here are brutal.'
+                }
+            };
+
             configureRunLanes();
             resetStationVisuals();
+            setupCoachTips();
             
             // Initial entrance animation
             stationRows.forEach((row, index) => {
@@ -2101,6 +2278,90 @@
 
             function athleteDisplay(athlete) {
                 return athlete === 'casey' ? 'Casey' : 'Jordan';
+            }
+
+            function setupCoachTips() {
+                stationRows.forEach(row => {
+                    const card = row.querySelector('.station-card');
+                    const header = card?.querySelector('.station-header');
+                    if (!card || !header) return;
+
+                    const code = card.querySelector('.station-code')?.textContent.trim();
+                    const tip = coachTips[code];
+                    if (!tip) return;
+
+                    const stationLabel = card.querySelector('.station-title')?.textContent.trim() || 'station';
+
+                    const wrap = document.createElement('div');
+                    wrap.className = 'coach-tip';
+
+                    const trigger = document.createElement('button');
+                    trigger.type = 'button';
+                    trigger.className = 'coach-tip-trigger';
+                    trigger.setAttribute('aria-label', `Coach tip for ${stationLabel}`);
+                    trigger.setAttribute('aria-expanded', 'false');
+                    trigger.textContent = 'Tips';
+
+                    const popover = document.createElement('div');
+                    popover.className = 'coach-tip-popover';
+                    popover.setAttribute('role', 'dialog');
+                    popover.setAttribute('aria-label', `Coach tip for ${stationLabel}`);
+
+                    const buildRow = (label, text) => {
+                        const r = document.createElement('div');
+                        r.className = 'coach-tip-row';
+                        const l = document.createElement('strong');
+                        l.textContent = label;
+                        const s = document.createElement('span');
+                        s.textContent = text;
+                        r.appendChild(l);
+                        r.appendChild(s);
+                        return r;
+                    };
+
+                    popover.appendChild(buildRow('Rule', tip.rule));
+                    popover.appendChild(buildRow('Coach tip', tip.tip));
+
+                    wrap.appendChild(trigger);
+                    wrap.appendChild(popover);
+
+                    const duration = header.querySelector('.station-duration');
+                    const right = document.createElement('div');
+                    right.className = 'station-header-right';
+                    right.appendChild(wrap);
+                    if (duration) right.appendChild(duration);
+                    header.appendChild(right);
+                });
+
+                const closeAllTips = () => {
+                    document.querySelectorAll('.coach-tip.open').forEach(w => {
+                        w.classList.remove('open');
+                        w.querySelector('.coach-tip-trigger')?.setAttribute('aria-expanded', 'false');
+                    });
+                };
+
+                document.addEventListener('click', e => {
+                    const trigger = e.target.closest('.coach-tip-trigger');
+                    if (trigger) {
+                        const wrap = trigger.closest('.coach-tip');
+                        if (!wrap) return;
+                        const wasOpen = wrap.classList.contains('open');
+                        closeAllTips();
+                        if (!wasOpen) {
+                            wrap.classList.add('open');
+                            trigger.setAttribute('aria-expanded', 'true');
+                        }
+                        e.stopPropagation();
+                        return;
+                    }
+                    if (!e.target.closest('.coach-tip-popover')) {
+                        closeAllTips();
+                    }
+                });
+
+                document.addEventListener('keydown', e => {
+                    if (e.key === 'Escape') closeAllTips();
+                });
             }
 
             function configureRunLanes() {
