@@ -1,14 +1,14 @@
-# HYROX Mixed Doubles Strategy
+# HYROX Men's Doubles Strategy
 
-A single-page planner for HYROX Mixed Doubles teams. Drop in your target time, partner names, and station splits, and the page renders an animated 16-segment timeline plus a rules checklist you can scan at a glance.
+A single-page planner for HYROX Men's Doubles teams. Drop in your target time, partner names, and station splits, and the page renders an animated 16-segment timeline plus a rules checklist you can scan at a glance.
 
-The current numbers are filled in for Jordan & Casey's plan around HYROX Shanghai 2026 as a worked example, but every section is meant to be edited for your own race and city.
+The current numbers are filled in for Jordan & Casey's plan around HYROX Shanghai 2026 as a worked example, but every section is meant to be edited for your own race and city. Numbers and rule chips are configured for **Men's Doubles** at Open loads (152 / 103 / 24 / 20 / 9kg). Mixed, Women's, and Pro divisions need their own station plans.
 
 ## What's on the page
 
 - **Animated 16-segment timeline** — 8 runs and 8 stations in race order with cumulative target times, so partners can agree on pacing before race day.
 - **Per-station partner split** — Ski Erg, Row, Sled Push/Pull, Burpees, Farmers Carry, Lunges, Wall Balls each show who does which share, in YGIG format.
-- **Rule checklist** — within-5s rule, station entry/exit together, Mixed Open weights, Wall Ball target heights, referenced against the current HYROX 25/26 Doubles Rulebook.
+- **Rule checklist** — together-at-the-lane-line rule, station entry/exit together, Open Men's weights, 3.00m Wall Ball target, referenced against the current HYROX 25/26 Doubles Rulebook.
 
 ## New here? Hover the Tips badge
 
@@ -53,10 +53,9 @@ Both athletes complete every 1km run. Workout stations use YGIG format: one athl
 
 ## Rule checks (verify against your event's athlete guide)
 
-- Athletes must stay within 5 seconds of each other.
-- Both athletes must enter and leave workout stations together.
-- Mixed Doubles uses Men/Mixed Open weights: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
-- Wall Ball targets differ by athlete: male athlete 3.00m, female athlete 2.70m.
+- Both athletes must complete every 1km run together and enter/exit each workout station together. "Within 5 seconds" is a common coaching cue, but the rulebook only enforces *together at the lane line* — partners cannot start or leave a station alone.
+- Men's Doubles uses Open Men's loads: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 9kg.
+- Wall Ball target: 3.00m for both athletes (Men's Doubles uses one shared target — there are no athlete-specific heights here).
 - Wave time, lap count, and venue layout vary by event — confirm them in your athlete guide.
 
 Sources: [HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and the [official HYROX events listing](https://hyrox.com/events/).

@@ -1,14 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyrox Mixed Doubles Strategy | Race Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="HYROX Men's Doubles race-day planner: animated 16-segment timeline (8 runs + 8 stations), per-station partner splits, official rule check, and per-station coach tips for first-time teams.">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="color-scheme" content="dark">
+    <link rel="canonical" href="https://hzacode.github.io/Hyrox-Mixed-Doubles/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="HYROX Men's Doubles Strategy | Race Simulator">
+    <meta property="og:description" content="Animated 16-segment HYROX Men's Doubles planner with per-station partner splits, rule check, and coach tips.">
+    <meta property="og:url" content="https://hzacode.github.io/Hyrox-Mixed-Doubles/">
+    <meta property="og:image" content="https://hzacode.github.io/Hyrox-Mixed-Doubles/hyrox_background.png">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="HYROX Men's Doubles Strategy | Race Simulator">
+    <meta name="twitter:description" content="Animated 16-segment HYROX Men's Doubles planner with per-station partner splits, rule check, and coach tips.">
+    <meta name="twitter:image" content="https://hzacode.github.io/Hyrox-Mixed-Doubles/hyrox_background.png">
+    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), interest-cohort=()">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230a0a0a'/><text x='32' y='45' font-family='Arial' font-size='38' font-weight='800' fill='%234FC3F7' text-anchor='middle'>H</text></svg>">
+    <title>HYROX Men's Doubles Strategy | Race Simulator</title>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "HYROX Men's Doubles Strategy | Race Simulator",
+      "description": "HYROX Men's Doubles race-day planner: animated 16-segment timeline, per-station partner splits, official rule check, and coach tips.",
+      "url": "https://hzacode.github.io/Hyrox-Mixed-Doubles/",
+      "inLanguage": "en",
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://hzacode.github.io/Hyrox-Mixed-Doubles/hyrox_background.png"
+      },
+      "about": {
+        "@type": "ExerciseAction",
+        "name": "HYROX Men's Doubles",
+        "description": "8 x 1km runs paired with 8 functional fitness stations: Ski Erg, Sled Push, Sled Pull, Burpee Broad Jumps, Row, Farmers Carry, Sandbag Lunges, Wall Balls."
+      },
+      "isAccessibleForFree": true
+    }
+    </script>
+    <script>document.documentElement.classList.replace('no-js','js');</script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Skip link: only visible when focused via keyboard. WCAG 2.4.1. */
+        .skip-link {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 999;
+            padding: 10px 16px;
+            background: #4FC3F7;
+            color: #0a0a0a;
+            font-weight: 800;
+            text-decoration: none;
+            border-radius: 8px;
+            transform: translateY(-200%);
+            transition: transform 0.18s ease;
+        }
+
+        .skip-link:focus {
+            transform: translateY(0);
+            outline: 3px solid #FFD54F;
+            outline-offset: 2px;
+        }
+
+        /* High-contrast keyboard focus ring on all interactive elements. WCAG 2.4.7. */
+        :focus-visible {
+            outline: 3px solid #FFD54F;
+            outline-offset: 2px;
+            border-radius: 4px;
         }
 
         body {
@@ -17,6 +96,10 @@
             min-height: 100vh;
             color: #ffffff;
             padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(20px, env(safe-area-inset-left));
+            padding-right: max(20px, env(safe-area-inset-right));
             line-height: 1.6;
         }
 
@@ -44,7 +127,7 @@
 
         .header .subtitle {
             font-size: 0.95rem;
-            color: #666;
+            color: #a8a8a8;
             font-weight: 400;
             margin-bottom: 40px;
             text-transform: uppercase;
@@ -184,8 +267,8 @@
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
             margin-bottom: 8px;
-            color: #777;
-            font-size: 0.68rem;
+            color: #a8a8a8;
+            font-size: 0.75rem;
             font-weight: 800;
             letter-spacing: 0.12em;
         }
@@ -463,12 +546,17 @@
             grid-template-columns: 80px 1fr 80px;
             gap: 16px;
             align-items: center;
-            opacity: 0;
-            transform: translateY(20px);
             position: relative;
         }
 
-        .station-row.active {
+        /* Entrance animation only applies when JS is enabled.
+           Without JS the rows render immediately. */
+        .js .station-row {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .js .station-row.active {
             opacity: 1;
             transform: translateY(0);
             transition: all 0.5s ease;
@@ -653,6 +741,8 @@
             color: #FFC107;
             border: 1px solid rgba(255, 193, 7, 0.35);
             padding: 4px 10px;
+            min-height: 24px;
+            min-width: 24px;
             border-radius: 999px;
             font-size: 0.68rem;
             font-weight: 700;
@@ -661,6 +751,7 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 5px;
             line-height: 1;
             font-family: inherit;
@@ -769,7 +860,10 @@
 
             .coach-tip-trigger {
                 font-size: 0.62rem;
-                padding: 3px 8px;
+                /* Keep min 24x24 hit target on mobile (WCAG 2.5.8). */
+                padding: 4px 10px;
+                min-height: 24px;
+                min-width: 24px;
             }
         }
 
@@ -807,7 +901,7 @@
 
         .timeline-segment::before,
         .timeline-segment::after {
-            color: #666;
+            color: #a8a8a8;
             font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -935,8 +1029,8 @@
             display: grid;
             grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            color: #777;
-            font-size: 0.62rem;
+            color: #a8a8a8;
+            font-size: 0.75rem;
             font-weight: 800;
             letter-spacing: 0.1em;
         }
@@ -1051,8 +1145,8 @@
             border: 1px solid #333;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.04);
-            color: #777;
-            font-size: 0.62rem;
+            color: #a8a8a8;
+            font-size: 0.75rem;
             font-weight: 800;
             letter-spacing: 0.04em;
             text-align: center;
@@ -1158,7 +1252,7 @@
         .rules-source {
             margin: -20px 0 28px;
             text-align: center;
-            color: #666;
+            color: #a8a8a8;
             font-size: 0.72rem;
             font-weight: 600;
         }
@@ -1204,7 +1298,7 @@
             content: "\2192";
             position: absolute;
             right: -15px;
-            color: #666;
+            color: #a8a8a8;
             font-size: 0.85rem;
         }
 
@@ -1249,7 +1343,7 @@
         .parallel-run::before {
             content: "START -> FINISH";
             justify-self: end;
-            color: #666;
+            color: #a8a8a8;
             font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -1285,7 +1379,7 @@
             content: attr(data-role);
             display: block;
             margin-top: 2px;
-            color: #777;
+            color: #a8a8a8;
             font-size: 0.48rem;
             font-weight: 800;
             letter-spacing: 0.12em;
@@ -1409,6 +1503,254 @@
             }
         }
 
+        @media (max-width: 560px) {
+            .container {
+                padding: 18px 12px 32px;
+            }
+
+            .header h1 {
+                font-size: 1.85rem;
+                margin-bottom: 8px;
+            }
+
+            .header .subtitle {
+                font-size: 0.78rem;
+                letter-spacing: 0.12em;
+                margin-bottom: 28px;
+            }
+
+            .target-time {
+                padding: 18px 16px;
+            }
+
+            .target-primary {
+                font-size: 1.4rem;
+            }
+
+            .target-secondary {
+                font-size: 0.92rem;
+            }
+
+            .target-budget {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .budget-chip {
+                width: 100%;
+                text-align: center;
+            }
+
+            .strategy-rules {
+                gap: 6px;
+            }
+
+            .rule-chip {
+                font-size: 0.72rem;
+                padding: 6px 12px;
+            }
+
+            .rules-audit {
+                padding: 14px;
+            }
+
+            .rules-audit-title {
+                font-size: 0.78rem;
+            }
+
+            .rules-audit-item {
+                padding: 10px 12px;
+                font-size: 0.78rem;
+            }
+
+            .rules-audit-item strong {
+                font-size: 0.78rem;
+            }
+
+            .rules-source {
+                font-size: 0.7rem;
+                margin: -10px 0 22px;
+            }
+
+            /* Stations: stack time markers above the card on phones */
+            .station-row {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "time cumulative"
+                    "card card";
+                column-gap: 12px;
+                row-gap: 4px;
+                margin-bottom: 4px;
+            }
+
+            .station-row .time-marker {
+                grid-area: time;
+                justify-self: start;
+                background: transparent;
+                border: none;
+                padding: 0 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                color: #a8a8a8;
+                letter-spacing: 0.04em;
+            }
+
+            .station-row .cumulative-time {
+                grid-area: cumulative;
+                justify-self: end;
+                background: transparent;
+                border: none;
+                padding: 0 4px;
+                font-size: 0.74rem;
+                font-weight: 700;
+                color: #a8a8a8;
+            }
+
+            .station-row .station-card {
+                grid-area: card;
+                padding: 14px 14px 16px;
+            }
+
+            .station-title {
+                font-size: 1rem;
+                gap: 8px;
+                flex: 1 1 auto;
+                min-width: 0;
+            }
+
+            .station-code {
+                font-size: 0.6rem;
+                padding: 3px 7px;
+            }
+
+            .station-duration {
+                padding: 4px 8px;
+                font-size: 0.74rem;
+            }
+
+            .station-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .station-header-right {
+                gap: 6px;
+                margin-left: auto;
+            }
+
+            .coach-tip-trigger {
+                font-size: 0.6rem;
+                /* Maintain 24x24 hit target even on the smallest viewports. */
+                padding: 4px 10px;
+                min-height: 24px;
+                min-width: 24px;
+                letter-spacing: 0.1em;
+            }
+
+            .coach-tip-popover {
+                width: calc(100vw - 36px);
+                max-width: 320px;
+                font-size: 0.78rem;
+            }
+
+            .station-details {
+                padding: 12px;
+            }
+
+            .distance-info {
+                font-size: 0.78rem;
+                margin-bottom: 8px;
+            }
+
+            .special-notes,
+            .station-alert {
+                font-size: 0.74rem;
+            }
+
+            /* Wall Balls / Row timeline-track: scrollable when too many blocks */
+            .timeline-track {
+                overflow-x: auto;
+                scrollbar-width: thin;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .timeline-block {
+                min-width: 56px;
+                flex: 0 0 auto;
+            }
+
+            .timeline-label {
+                font-size: 0.6rem;
+            }
+
+            .timeline-distance {
+                font-size: 0.78rem;
+            }
+
+            /* Shuttle stations: single column legs, shrink lane */
+            .shuttle-course {
+                --lane-size: 100% !important;
+                padding: 10px;
+            }
+
+            .shuttle-meta {
+                font-size: 0.75rem;
+            }
+
+            .shuttle-legs {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6px;
+            }
+
+            .shuttle-leg {
+                font-size: 0.75rem;
+                padding: 7px 6px;
+            }
+
+            /* Race-flow: horizontal scroll with snap on phones */
+            .race-flow {
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                scroll-padding: 12px;
+                gap: 8px;
+                padding: 12px;
+                scrollbar-width: thin;
+            }
+
+            .flow-step {
+                flex: 0 0 auto;
+                scroll-snap-align: start;
+                font-size: 0.72rem;
+                padding: 6px 10px;
+            }
+
+            .flow-step:not(:last-child)::after {
+                right: -12px;
+                font-size: 0.74rem;
+            }
+
+            /* Race progress + controls */
+            .race-progress-meta {
+                font-size: 0.75rem;
+            }
+
+            .play-button {
+                font-size: 1rem;
+                padding: 14px 22px;
+            }
+
+            .reset-button {
+                font-size: 0.9rem;
+                padding: 12px 18px;
+            }
+
+            .race-timer {
+                font-size: 1.05rem;
+                padding: 12px 18px;
+            }
+        }
+
         @media (max-width: 480px), (max-height: 760px) {
             .podium-container {
                 gap: 12px;
@@ -1478,11 +1820,12 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Hyrox Mixed Doubles</h1>
-            <p class="subtitle">Jordan & Casey's Mixed Doubles Strategy</p>
-        </div>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <main id="main-content" class="container">
+        <header class="header">
+            <h1>HYROX Men's Doubles</h1>
+            <p class="subtitle">Jordan &amp; Casey's Men's Doubles Strategy</p>
+        </header>
 
         <div class="target-time">
             <div class="target-primary">On-course target: 52:20</div>
@@ -1496,66 +1839,66 @@
 
         <div class="animation-controls">
             <button id="playButton" class="play-btn" type="button">
-                <div class="play-icon">PLAY</div>
+                <div class="play-icon" aria-hidden="true">PLAY</div>
                 <span>Start Race Animation</span>
             </button>
             <button id="resetButton" class="reset-btn" type="button">Reset</button>
-            <div id="raceTimer" class="race-timer">00:00</div>
+            <div id="raceTimer" class="race-timer" role="timer" aria-live="off" aria-atomic="true" aria-label="Race elapsed time">00:00</div>
         </div>
 
         <div class="race-progress-panel">
-            <div class="race-progress-meta">
+            <div class="race-progress-meta" aria-hidden="true">
                 <span>START</span>
                 <span>RACE PROGRESS</span>
                 <span>FINISH</span>
             </div>
-            <div class="race-progress-track">
+            <div class="race-progress-track" role="progressbar" aria-label="Race progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="raceProgressTrack">
                 <div id="raceProgressFill" class="race-progress-fill"></div>
             </div>
         </div>
 
         <div class="strategy-rules">
-            <div class="rule-chip">Division: Mixed Doubles</div>
+            <div class="rule-chip">Division: Men's Doubles</div>
             <div class="rule-chip">Runs: both athletes complete every 1km together</div>
             <div class="rule-chip">Stations: YGIG, partner stays in station</div>
-            <div class="rule-chip">Wall Ball targets: male 3.00m / female 2.70m</div>
+            <div class="rule-chip">Wall Ball target: 3.00m for both athletes</div>
         </div>
 
         <div class="rules-source">
-            Last checked: Apr 26, 2026 | Mixed Doubles | <a href="https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf" target="_blank" rel="noopener">HYROX 25/26 Doubles Rulebook</a>. Wave time, lap count, and venue layout vary by event &mdash; confirm them in your athlete guide before race day.
+            Last checked: Apr 26, 2026 | Men's Doubles | <a href="https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf" target="_blank" rel="noopener">HYROX 25/26 Doubles Rulebook</a>. Wave time, lap count, and venue layout vary by event &mdash; confirm them in your athlete guide before race day.
         </div>
 
-        <div class="rules-audit" aria-label="Mixed Doubles rule check">
-            <div class="rules-audit-title">Mixed Doubles Rule Check</div>
+        <section class="rules-audit" aria-labelledby="rules-audit-heading">
+            <h2 id="rules-audit-heading" class="rules-audit-title">Men's Doubles Rule Check</h2>
             <div class="rules-audit-grid">
                 <div class="rules-audit-item">
                     <strong>Race Structure</strong>
                     8 x 1km runs plus Ski Erg, Sled Push, Sled Pull, Burpee Broad Jumps, Row, Farmers Carry, Sandbag Lunges, and Wall Balls.
                 </div>
                 <div class="rules-audit-item">
-                    <strong>Mixed Doubles Weights</strong>
-                    Same as Men/Mixed Open: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 6kg.
+                    <strong>Men's Doubles Weights</strong>
+                    Open Men's loads per the Doubles Rulebook: Sled Push 152kg, Sled Pull 103kg, Farmers Carry 2 x 24kg, Sandbag Lunges 20kg, Wall Ball 9kg.
                 </div>
                 <div class="rules-audit-item">
-                    <strong>Wall Ball Targets</strong>
-                    Mixed Doubles uses athlete-specific targets: male athlete 3.00m and female athlete 2.70m.
+                    <strong>Wall Ball Target</strong>
+                    Men's Doubles uses a 9kg ball with a 3.00m target for both athletes &mdash; no athlete-specific heights.
                 </div>
                 <div class="rules-audit-item warning">
-                    <strong>Team Separation</strong>
-                    Both athletes must stay within 5 seconds of each other, enter/exit stations together, and only start a workout once both are present.
+                    <strong>Team Together Rule</strong>
+                    Both athletes must complete every 1km run together and enter/exit each workout station together. A workout cannot start until both partners are in the station. ("Within 5 seconds" is a common coaching cue, not a rulebook clause &mdash; the rulebook enforces together at the lane line.)
                 </div>
                 <div class="rules-audit-item warning">
                     <strong>Per-event TBA</strong>
-                    Confirm the exact Mixed Doubles wave time, running lap count, and venue map from your event's athlete guide before race day &mdash; these vary between cities.
+                    Confirm the exact Men's Doubles wave time, running lap count, and venue map from your event's athlete guide before race day &mdash; these vary between cities.
                 </div>
                 <div class="rules-audit-item warning">
-                    <strong>Mixed Scope</strong>
-                    This simulator is built for Mixed Doubles using Men/Mixed Open weights and mixed Wall Ball target heights. Do not reuse Pro loads without rebuilding the station plan.
+                    <strong>Doubles Scope</strong>
+                    This simulator is built for Men's Doubles at Open loads (152 / 103 / 24 / 20 / 9kg) with a 3.00m Wall Ball target for both athletes. Mixed, Women's, and Pro divisions need their own station plans.
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="race-flow" aria-label="Mixed Doubles race flow">
+        <div class="race-flow" aria-label="Men's Doubles race flow" tabindex="0">
             <div class="flow-step run-step"><span class="flow-code">R1</span>Run 1</div>
             <div class="flow-step workout-step"><span class="flow-code">SKI</span>Ski Erg</div>
             <div class="flow-step run-step"><span class="flow-code">R2</span>Run 2</div>
@@ -1574,21 +1917,21 @@
             <div class="flow-step finish-step"><span class="flow-code">WB</span>Wall Balls</div>
         </div>
 
-        <div id="victoryCelebration" class="victory-celebration">
-            <!-- Confetti -->
-            <div class="confetti" style="left: 10%; animation-delay: 0s;"></div>
-            <div class="confetti" style="left: 20%; animation-delay: 0.3s;"></div>
-            <div class="confetti" style="left: 30%; animation-delay: 0.6s;"></div>
-            <div class="confetti" style="left: 40%; animation-delay: 0.9s;"></div>
-            <div class="confetti" style="left: 50%; animation-delay: 1.2s;"></div>
-            <div class="confetti" style="left: 60%; animation-delay: 1.5s;"></div>
-            <div class="confetti" style="left: 70%; animation-delay: 1.8s;"></div>
-            <div class="confetti" style="left: 80%; animation-delay: 2.1s;"></div>
-            <div class="confetti" style="left: 90%; animation-delay: 2.4s;"></div>
+        <div id="victoryCelebration" class="victory-celebration" role="dialog" aria-labelledby="victoryTitle" inert>
+            <!-- Confetti (decorative) -->
+            <div class="confetti" style="left: 10%; animation-delay: 0s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 20%; animation-delay: 0.3s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 30%; animation-delay: 0.6s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 40%; animation-delay: 0.9s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 50%; animation-delay: 1.2s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 60%; animation-delay: 1.5s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 70%; animation-delay: 1.8s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 80%; animation-delay: 2.1s;" aria-hidden="true"></div>
+            <div class="confetti" style="left: 90%; animation-delay: 2.4s;" aria-hidden="true"></div>
 
             <div class="podium-container">
-                <div class="trophy">FINISH</div>
-                <div class="victory-title">Team Finish</div>
+                <div class="trophy" aria-hidden="true">FINISH</div>
+                <h2 id="victoryTitle" class="victory-title">Team Finish</h2>
 
                 <div class="podium team-podium">
                     <div class="podium-step team-step">
@@ -1615,13 +1958,14 @@
                     </div>
                 </div>
 
-                <button class="close-celebration" onclick="closeCelebration()">
+                <button id="closeCelebrationBtn" class="close-celebration" type="button">
                     Continue Training
                 </button>
             </div>
         </div>
 
-        <div class="timeline">
+        <section class="timeline" aria-labelledby="timeline-heading">
+            <h2 id="timeline-heading" class="sr-only">Race Timeline</h2>
             <!-- 1km Run -->
             <div class="station-row run-row" data-animation-duration="1200">
                 <div class="time-marker">0:00</div>
@@ -2168,14 +2512,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="station-alert">Targets: Jordan 3.00m, Casey 2.70m. Repeat any No rep immediately.</div>
+                        <div class="station-alert">Target: 3.00m for both Jordan and Casey (Men's Doubles, 9kg ball). Repeat any No rep immediately.</div>
                         <div class="special-notes">Use 10-15 rep sets to protect squat depth and avoid no-reps; no flying handoffs.</div>
                     </div>
                 </div>
                 <div class="cumulative-time">52:20</div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <script>
         // Race animation system
@@ -2186,6 +2530,7 @@
             const resetButton = document.getElementById('resetButton');
             const raceTimer = document.getElementById('raceTimer');
             const raceProgressFill = document.getElementById('raceProgressFill');
+            const raceProgressTrack = document.getElementById('raceProgressTrack');
             const playIcon = playButton.querySelector('.play-icon');
             const playText = playButton.querySelector('span');
             
@@ -2198,6 +2543,7 @@
             let animationInterval;
             let stationTimeout;
             let scrollTicking = false;
+            let coachTipIdCounter = 0;
             
             const animationSlowdown = 3;
             const defaultSegmentDuration = 1200 * animationSlowdown;
@@ -2213,7 +2559,7 @@
 
             const coachTips = {
                 RUN: {
-                    rule: 'Stay within 5 seconds of each other at all times. Both partners enter and leave every workout station together.',
+                    rule: 'Both athletes must complete every 1km run together and enter/exit the next workout station together. ("Within 5 seconds" is a common coaching cue, not a hard rulebook clause.)',
                     tip: 'Pace is set by the slower partner. Let the stronger runner take the last share at each station so the weaker partner gets longer rest before the next 1km.'
                 },
                 SKI: {
@@ -2253,6 +2599,7 @@
             configureRunLanes();
             resetStationVisuals();
             setupCoachTips();
+            makeScrollableRegionsFocusable();
             
             // Initial entrance animation
             stationRows.forEach((row, index) => {
@@ -2290,7 +2637,14 @@
                     const tip = coachTips[code];
                     if (!tip) return;
 
-                    const stationLabel = card.querySelector('.station-title')?.textContent.trim() || 'station';
+                    const titleEl = card.querySelector('.station-title');
+                    const codeText = titleEl?.querySelector('.station-code')?.textContent.trim() || '';
+                    const fullTitle = titleEl?.textContent.trim() || 'station';
+                    const stationLabel = (codeText && fullTitle.startsWith(codeText))
+                        ? fullTitle.slice(codeText.length).trim() || fullTitle
+                        : fullTitle;
+
+                    const popoverId = `coach-tip-${++coachTipIdCounter}`;
 
                     const wrap = document.createElement('div');
                     wrap.className = 'coach-tip';
@@ -2298,13 +2652,15 @@
                     const trigger = document.createElement('button');
                     trigger.type = 'button';
                     trigger.className = 'coach-tip-trigger';
-                    trigger.setAttribute('aria-label', `Coach tip for ${stationLabel}`);
+                    trigger.setAttribute('aria-label', `Tips for ${stationLabel}`);
                     trigger.setAttribute('aria-expanded', 'false');
+                    trigger.setAttribute('aria-controls', popoverId);
                     trigger.textContent = 'Tips';
 
                     const popover = document.createElement('div');
                     popover.className = 'coach-tip-popover';
-                    popover.setAttribute('role', 'dialog');
+                    popover.id = popoverId;
+                    popover.setAttribute('role', 'group');
                     popover.setAttribute('aria-label', `Coach tip for ${stationLabel}`);
 
                     const buildRow = (label, text) => {
@@ -2360,7 +2716,20 @@
                 });
 
                 document.addEventListener('keydown', e => {
-                    if (e.key === 'Escape') closeAllTips();
+                    if (e.key === 'Escape') {
+                        closeAllTips();
+                        const celebration = document.getElementById('victoryCelebration');
+                        if (celebration?.classList.contains('show')) closeCelebration();
+                    }
+                });
+            }
+
+            function makeScrollableRegionsFocusable() {
+                // Add tabindex so horizontally scrollable regions are reachable by keyboard (WCAG 2.1.1).
+                document.querySelectorAll('.timeline-track, .race-flow').forEach(el => {
+                    if (!el.hasAttribute('tabindex')) {
+                        el.setAttribute('tabindex', '0');
+                    }
                 });
             }
 
@@ -2506,7 +2875,9 @@
                 const progress = totalAnimationDuration > 0 ? Math.min(elapsed / totalAnimationDuration, 1) : 1;
                 const displaySeconds = Math.round(progress * targetSeconds);
                 raceTimer.textContent = formatTime(displaySeconds);
-                raceProgressFill.style.setProperty('--race-progress', `${progress * 100}%`);
+                const progressPct = progress * 100;
+                raceProgressFill.style.setProperty('--race-progress', `${progressPct}%`);
+                raceProgressTrack?.setAttribute('aria-valuenow', String(Math.round(progressPct)));
 
                 const currentRow = stationRows[currentStationIndex];
                 if (!currentRow) return;
@@ -2524,19 +2895,6 @@
                 updateShuttleCourse(currentRow, stationProgress);
             }
 
-            function positionRunnersAtProgress(index, stationProgress, transitionDuration = 0) {
-                const row = stationRows[index];
-                if (!row) return;
-
-                const stationCard = row.querySelector('.station-card');
-                if (!stationCard) return;
-
-                const cardRect = stationCard.getBoundingClientRect();
-                const containerRect = container.getBoundingClientRect();
-                const topOffset = cardRect.top - containerRect.top + (cardRect.height / 2) - 14;
-                const startLeftOffset = cardRect.left - containerRect.left + 12;
-            }
-            
             function moveRunnersToStation(index, startingElapsed = 0) {
                 if (index >= stationRows.length) return;
                 
@@ -2586,6 +2944,8 @@
                 playIcon.textContent = 'PAUSE';
                 playText.textContent = 'Pause Race';
                 playButton.classList.add('playing');
+                // Announce timer changes while the race is running.
+                raceTimer.setAttribute('aria-live', 'polite');
                 
                 // Continue from current station
                 animateNextStation();
@@ -2606,6 +2966,8 @@
                     playButton.classList.remove('playing');
                     raceTimer.textContent = formatTime(targetSeconds);
                     raceProgressFill.style.setProperty('--race-progress', '100%');
+                    raceProgressTrack?.setAttribute('aria-valuenow', '100');
+                    raceTimer.setAttribute('aria-live', 'off');
                     pausedRaceElapsed = totalAnimationDuration;
                     pausedStationElapsed = 0;
                     
@@ -2651,10 +3013,12 @@
                 playText.textContent = 'Start Race Animation';
                 playButton.classList.remove('playing');
                 raceTimer.textContent = '00:00';
+                raceTimer.setAttribute('aria-live', 'off');
                 raceProgressFill.style.setProperty('--race-progress', '0%');
+                raceProgressTrack?.setAttribute('aria-valuenow', '0');
                 
                 // Hide victory celebration
-                document.getElementById('victoryCelebration').classList.remove('show');
+                closeCelebration();
                 
                 // Reset stations
                 stationRows.forEach(row => {
@@ -2666,23 +3030,27 @@
             function showVictoryCelebration() {
                 const celebration = document.getElementById('victoryCelebration');
                 celebration.classList.add('show');
+                celebration.removeAttribute('inert');
                 
                 // Add some celebration sound effect simulation with animation
                 const trophy = celebration.querySelector('.trophy');
                 trophy.style.animation = 'trophy-bounce 0.5s ease-in-out 3';
+
+                // Move focus into the dialog for keyboard / screen reader users.
+                const closeBtn = document.getElementById('closeCelebrationBtn');
+                closeBtn?.focus({ preventScroll: true });
             }
             
             function closeCelebration() {
                 const celebration = document.getElementById('victoryCelebration');
                 celebration.classList.remove('show');
+                celebration.setAttribute('inert', '');
             }
-            
-            // Make closeCelebration globally available
-            window.closeCelebration = closeCelebration;
             
             // Event listeners
             playButton.addEventListener('click', startRaceAnimation);
             resetButton.addEventListener('click', resetRace);
+            document.getElementById('closeCelebrationBtn')?.addEventListener('click', closeCelebration);
             
             if (!reduceMotion) {
                 window.addEventListener('scroll', () => {
@@ -2695,7 +3063,7 @@
                         document.querySelector('.header').style.transform = `translateY(${rate}px)`;
                         scrollTicking = false;
                     });
-                });
+                }, { passive: true });
             }
         });
     </script>

@@ -1,7 +1,18 @@
-# Local scratch / probe artifacts
-tmp/
-
 # OS / editor
 .DS_Store
 Thumbs.db
 .vscode/*.log
+
+# Build / tooling artifacts
+node_modules/
+package-lock.json
+.lighthouseci/
+
+# Local scratch artifacts under tmp/ (kept out of git but readable by tooling)
+tmp/__pycache__/
+tmp/pdfs/
+tmp/tools/
+tmp/*.pyc
+
+# Stray scratch files at repo root
+_scratch_*

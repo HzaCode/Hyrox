@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hzacode.github.io/Hyrox-Mixed-Doubles/sitemap.xml
