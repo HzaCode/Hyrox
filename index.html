@@ -183,6 +183,37 @@
             font-weight: 400;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            position: relative;
+            isolation: isolate;
+        }
+
+        /* Venue atmosphere layer: fixed-position background image with a
+           strong top-to-bottom darkening gradient so foreground text and
+           cards keep their existing WCAG AA contrast. Sits behind every
+           content stacking context via z-index: -1 within the body's
+           isolation context. */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(180deg,
+                    rgba(10, 10, 10, 0.55) 0%,
+                    rgba(10, 10, 10, 0.78) 35%,
+                    rgba(10, 10, 10, 0.94) 70%,
+                    rgba(10, 10, 10, 1) 100%),
+                url('hyrox_background.png');
+            background-size: cover, cover;
+            background-position: center top, center top;
+            background-repeat: no-repeat, no-repeat;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            body::before {
+                background-position: center top, center 20%;
+            }
         }
 
         .container {
