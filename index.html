@@ -275,7 +275,7 @@
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;
-            color: var(--text-tertiary);
+            color: var(--text-secondary);
         }
 
         .hero-value {
@@ -333,7 +333,7 @@
 
         .race-command-kicker,
         .race-command-state {
-            color: var(--text-tertiary);
+            color: var(--text-secondary);
             font-size: 0.6875rem;
             font-weight: 500;
             letter-spacing: 0.12em;
@@ -1039,15 +1039,18 @@
             font-style: normal;
             opacity: 0;
             pointer-events: none;
+            visibility: hidden;
             transform: translateY(-4px);
-            transition: opacity var(--transition-fast), transform var(--transition-fast);
+            transition: opacity var(--transition-fast), transform var(--transition-fast), visibility 0s linear var(--transition-fast);
         }
 
         .coach-tip:hover .coach-tip-popover,
         .coach-tip.open .coach-tip-popover {
             opacity: 1;
             pointer-events: auto;
+            visibility: visible;
             transform: translateY(0);
+            transition: opacity var(--transition-fast), transform var(--transition-fast), visibility 0s linear 0s;
         }
 
         .coach-tip-popover::before {
@@ -1986,12 +1989,12 @@
                 font-size: 0.75rem;
             }
 
-            .play-button {
+            .play-btn {
                 font-size: 1rem;
                 padding: 14px 22px;
             }
 
-            .reset-button {
+            .reset-btn {
                 font-size: 0.9rem;
                 padding: 12px 18px;
             }
