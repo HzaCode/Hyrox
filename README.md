@@ -60,6 +60,13 @@ Both athletes complete every 1km run. Workout stations use YGIG format: one athl
 
 Sources: [HYROX 25/26 Doubles Rulebook](https://maintain.hyrox.com/rulebooks/HYROX_RulebookDoubles_EN.pdf) and the [official HYROX events listing](https://hyrox.com/events/).
 
+## Roadmap
+
+Based on community feedback, the following features are planned for upcoming iterations:
+
+1. **Drag-and-drop station/role assignment** — let teams reassign which partner runs each share of a station (Ski Erg, Sled Push/Pull, Burpees, Farmers Carry, Lunges, Wall Balls) by dragging chips between partner lanes, instead of editing the source.
+2. **Screenshot sharing** — one-click export of the full race plan (timeline + station splits + rule checklist) as an image, so teams can share their strategy in chat groups or save it to phones for race day.
+
 ## Usage
 
 Open `index.html` directly in a browser. No dependencies, no build step.
